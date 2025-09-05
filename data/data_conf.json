@@ -1,0 +1,30 @@
+{
+    "dataset":{
+        "local_vocab_and_pretrain_demo1": {
+            "file_path":"data/dataset/pretrain_demo1.jsonl",
+            "type":"local_file_relative_path"
+        },
+        "remote_pretrain_demo1":{
+            "repo": "rainfullclub/pretrain_train_simple_demo",
+            "type": "hugging_face_repo"
+        },
+        "rainfall_pretrain_demo":{
+            "repo": "rainfullclub/pretrain_demo",
+            "type": "hugging_face_repo"
+        }
+    },
+    "tokenizer":{
+        "minimind_tokenizer": {
+            "file_path": "data/tokenizer/default",
+            "type":"local_file_relative_path"
+        },
+        "qwen2_tokenizer": {
+            "repo": "Qwen/Qwen2-0.5B-Instruct",
+            "type": "hugging_face_repo"
+        },
+        "qwen3_tokenizer": {
+            "repo": "Qwen/Qwen3-0.6B",
+            "type": "hugging_face_repo"
+        }
+    }
+}

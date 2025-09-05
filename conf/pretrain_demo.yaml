@@ -1,0 +1,8 @@
+# 资源部分
+tokenizer_path: minimind_tokenizer
+output_dir: 'D:\tmp\pretrain_test'
+dataset_path: 'D:\Data\pretrain_data\rainfall_hq_2.jsonl' # 数据文件需要存在，并且是jsonl格式
+
+# 数据加载部分
+batch_size: '4'
+epochs: '3'
