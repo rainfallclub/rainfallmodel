@@ -70,7 +70,15 @@ class InferRunner(InferInterface):
         top_p: float, 
         temperature: float
         ) -> tuple[list[dict[str, str]], list[dict[str, str]], str]:
-        lang = self.manager.get_lang()
+        """
+        推理生成，暂时不支持流式输出，目前是一次性生成，后续再给出更完善的实现
+        """
+
+        # 如果没有推理后端，暂时实现为不报错，原数据返回
+        # todo， 还是实现为哪种形式呢？
+        if self.backend is None:
+            return chatbot, messages, ""
+        
         """
         推理生成数据
         """  
