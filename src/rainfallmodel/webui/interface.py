@@ -23,11 +23,12 @@ from .tab_vocab_info import create_vocab_info_tab
 from .tab_top import create_top
 from .tab_todo import create_todo_tab
 from .manager import Manager
+from ..common.misc import is_env_enabled, fix_proxy
 
 if is_gradio_available():
     import gradio as gr
 
-def create_ui(demo_mode: bool = False) -> "gr.Blocks":
+def create_ui() -> "gr.Blocks":
 
     with gr.Blocks(title=f"RainFall Model") as demo:
         manager = Manager()
@@ -65,13 +66,10 @@ def create_ui(demo_mode: bool = False) -> "gr.Blocks":
     return demo
 
 
-
-
-
-
-
-
 def run_web_ui() -> None:
-    server_name = os.getenv("GRADIO_SERVER_NAME", "[::]" "0.0.0.0")
+    gradio_ipv6 = is_env_enabled("GRADIO_IPV6")
+    gradio_share = is_env_enabled("GRADIO_SHARE")
+    server_name = os.getenv("GRADIO_SERVER_NAME", "[::]" if gradio_ipv6 else "0.0.0.0")
     print("Visit http://ip:port for Web UI, e.g., http://127.0.0.1:7860")
-    create_ui().queue().launch(server_name="0.0.0.0", inbrowser=True)
+    fix_proxy(ipv6_enabled=gradio_ipv6)
+    create_ui().queue().launch(share=gradio_share, server_name=server_name, inbrowser=True)
