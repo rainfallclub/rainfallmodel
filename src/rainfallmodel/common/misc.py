@@ -18,6 +18,15 @@
 
 
 import os
+import gc
+import torch
+from transformers.utils import (
+    is_torch_bf16_gpu_available,
+    is_torch_cuda_available,
+    is_torch_mps_available,
+    is_torch_npu_available,
+    is_torch_xpu_available,
+)
 
 
 def is_env_enabled(env_var: str, default: str = "0") -> bool:
@@ -33,3 +42,10 @@ def fix_proxy(ipv6_enabled: bool = False) -> None:
             os.environ.pop(name, None)
 
 
+def torch_gc() -> None:
+    r"""Collect the device memory."""
+    gc.collect()
+    if is_torch_mps_available():
+        torch.mps.empty_cache()
+    elif is_torch_cuda_available():
+        torch.cuda.empty_cache()

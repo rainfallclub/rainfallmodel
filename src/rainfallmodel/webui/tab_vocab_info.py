@@ -16,13 +16,11 @@
 # limitations under the License.
 
 from typing import TYPE_CHECKING
-import json
 import ast
-from transformers.trainer_utils import SchedulerType
 
 
 from ..common.packages import is_gradio_available
-from ..common.resource import get_dataset_config, get_tokenizer_config
+from ..common.resource import  get_tokenizer_config
 from ..vocab.info import get_tokenizer
 from .manager import Manager
 

@@ -20,6 +20,7 @@ from ..common.packages import is_gradio_available
 from .tab_pretrain import create_train_tab
 from .tab_vocab_train import create_vocab_train_tab
 from .tab_vocab_info import create_vocab_info_tab
+from .tab_infer import create_infer_tab
 from .tab_top import create_top
 from .tab_todo import create_todo_tab
 from .manager import Manager
@@ -55,7 +56,7 @@ def create_ui() -> "gr.Blocks":
         with gr.Tab("模型微调"):
             manager.add_elems("ft", create_todo_tab(manager))
         with gr.Tab("模型推理"):
-            manager.add_elems("inference", create_todo_tab(manager))
+            manager.add_elems("infer", create_infer_tab(manager))
         with gr.Tab("模型蒸馏"):
             manager.add_elems("distill", create_todo_tab(manager))
         with gr.Tab("模型量化"):

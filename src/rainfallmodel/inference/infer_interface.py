@@ -12,24 +12,53 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from .backend_hf import BackendHf
 
 
-# 默认的数据集配置
-default_dataset_conf = {
+class InferInterface:
 
-    'text_field':'text',
-    'max_seq_length':1024,
-    'dataset_path':'',
-    'train_eval_percent':99,  # 训练集在整体数据集中的占比
+    def __init__(self, model_path:str):
+        """
+        初始化后端推理，目前仅支持huggingface
+        """
+        print("model_path:  ", model_path)
+        self.backend = BackendHf(model_path)
     
-}
+    def infer_generate(self, query: str, max_new_tokens: int, top_p: float, temperature: float) -> str:
+        return self.backend.generate(query, max_new_tokens, top_p, temperature)
 
 
-def get_user_dataset_conf(user_conf:dict) -> dict:
-    """
-    获取用户定义的数据集配置
-    """
-    default_dataset_conf.update(user_conf)
-    return default_dataset_conf
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

@@ -19,14 +19,29 @@
 
 
 ALERTS = {
-    # 预训练相关报错信息
+    # 预训练相关信息
     "pretrain_dataset_not_exists": {
         "zh": "预训练时，数据集缺失，无法训练。",
     },
 
+    # 推理相关信息
+    "infer_backend_loading": {
+        "zh": "模型状态: 模型正在玩命加载中，请耐心等待..."
+    },
+    "infer_backend_loaded": {
+        "zh": "模型状态: 模型已加载"
+    },
+    "infer_backend_unloading": {
+        "zh": "模型状态: 模型正在玩命卸载中，请耐心等待..."
+    },
+    "infer_backend_unloaded": {
+        "zh": "模型状态: 模型已卸载"
+    },
+    "infer_backend_not_exist":{
+        "zh": "后端模型缺失，无法生成文本，请先加载模型"
+    },
 
-
-    # 词表构建相关报错信息
+    # 词表构建相关信息
     "vocab_dataset_not_exists": {
         "zh": "构建词表时，数据集缺失，无法训练。",
     },

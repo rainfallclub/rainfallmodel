@@ -43,10 +43,6 @@ class PretrainRunner:
     def __init__(self, manager: "Manager") -> None:
         self.manager = manager
         self.trainer: Optional[Popen] = None
-        self.do_train = True
-        self.running_data: dict[Component, Any] = None
-        self.aborted = False
-        self.running = False
 
     def _validate_pretrain(self, data: dict["Component", Any]) -> str:
         r"""Validate the configuration."""

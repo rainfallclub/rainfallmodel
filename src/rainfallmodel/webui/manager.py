@@ -20,6 +20,7 @@ from collections.abc import Generator
 from typing import TYPE_CHECKING
 from .runner_vocab  import VocabRunner
 from .runner_pretrain import PretrainRunner
+from .runner_infer import InferRunner
 
 
 if TYPE_CHECKING:
@@ -33,6 +34,7 @@ class Manager:
         self._elem_to_id: dict[Component, str] = {}
         self.vocab_runner = VocabRunner(self)
         self.pretrain_runner = PretrainRunner(self)
+        self.infer_runner = InferRunner(self)
 
     def get_lang(self) -> str:
         r"""Support Chinese Only Current"""

@@ -97,7 +97,6 @@ def do_pretrain(args: Optional[dict[str, Any]] = None) -> None:
 
     # 第三步，处理数据集
     train_dataset, eval_dataset = get_pretrain_dataset(tokenizer, user_conf)
-    data_collator = DataCollatorForLanguageModeling(tokenizer=tokenizer, mlm=False)
 
     # 第四步，定义Trainer所需的参数
     args = get_pretrain_args(pretrain_conf)   
