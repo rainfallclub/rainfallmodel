@@ -17,6 +17,7 @@
 
 from typing import TYPE_CHECKING
 import ast
+import html
 
 
 from ..common.packages import is_gradio_available
@@ -37,7 +38,7 @@ tokenizer = None
 def show_tokenizer_info_click(tokenizer_path):
     tokenizer = get_tokenizer(tokenizer_path)
     vocab_info = str(tokenizer)
-    return "词表详情:" + vocab_info
+    return "词表详情:" + html.escape(vocab_info) # 这里需要进行HTML编码，特别注意！！
 
 def clear_tokenizer_info_click():
     return ""

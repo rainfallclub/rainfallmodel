@@ -44,7 +44,7 @@ def create_train_tab(manager: "Manager") -> dict[str, "Component"]:
         tokenizer_path = gr.Dropdown(choices=tokenizer_path_list, label="词表文件",  interactive=True, allow_custom_value=True)
 
     with gr.Row():
-        output_path_list = [get_output_path()]
+        output_path_list = [get_output_path() + "_pretrain"]
         output_dir = gr.Dropdown(choices=output_path_list, label="输出路径",  interactive=True, allow_custom_value=True)
 
     input_elems.update({dataset_path, output_dir, tokenizer_path})

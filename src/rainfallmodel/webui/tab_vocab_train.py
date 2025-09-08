@@ -18,6 +18,7 @@
 from typing import TYPE_CHECKING
 from ..common.packages import is_gradio_available
 from .manager import Manager
+from ..common.resource import get_dataset_config, get_output_path
 
 
 if is_gradio_available():
@@ -33,10 +34,12 @@ def create_vocab_train_tab(manager: "Manager") -> dict[str, "Component"]:
     elem_dict = dict()
 
     with gr.Row():
-        dataset_path = gr.Dropdown(label="数据集文件(支持本地文件，也可以下拉框中选择在线数据集)", allow_custom_value=True)
+        dataset_path_list = get_dataset_config()
+        dataset_path = gr.Dropdown(choices=dataset_path_list, label="数据集文件(支持本地文件，也可以下拉框中选择在线数据集)", allow_custom_value=True)
 
     with gr.Row():
-        output_dir = gr.Dropdown(label="输出路径", allow_custom_value=True)
+        output_path_list = [get_output_path() + "_tokenizer"]
+        output_dir = gr.Dropdown(choices=output_path_list, label="输出路径", allow_custom_value=True)
 
     with gr.Row():
         vocab_size_values = ["3200", "6400", "50257", "152064"]
@@ -54,11 +57,30 @@ def create_vocab_train_tab(manager: "Manager") -> dict[str, "Component"]:
         padding_token_values = ["<pad>", "<padding>"]
         padding_token = gr.Dropdown(choices=padding_token_values, label="填充token", value="<pad>", interactive=True, allow_custom_value=True)
         unknown_token_values = ["<unk>", "<unknown>"]
-        padding_token = gr.Dropdown(choices=unknown_token_values, label="未知token", value="<unk>", interactive=True, allow_custom_value=True)
-        bos_token_values = ["<s>", "<bos>", "<|beginoftext|>"]
-        eos_token =  gr.Dropdown(choices=bos_token_values, label="序列/句子开头token", value="<bos>", interactive=True, allow_custom_value=True)
-        eos_token_values = ["</s>", "<eos>", "<|endoftext|>"]
-        eos_token =  gr.Dropdown(choices=eos_token_values, label="序列/句子结尾token", value="<eos>", interactive=True, allow_custom_value=True)
+        unknown_token = gr.Dropdown(choices=unknown_token_values, label="未知token", value="<unk>", interactive=True, allow_custom_value=True)
+        bos_token_values = ["<s>", "<bos>", "<|beginoftext|>", "<|im_start|>"]
+        bos_token =  gr.Dropdown(choices=bos_token_values, label="开始token", value="<bos>", interactive=True, allow_custom_value=True)
+        eos_token_values = ["</s>", "<eos>", "<|endoftext|>", "<|im_end|>"]
+        eos_token =  gr.Dropdown(choices=eos_token_values, label="结束token", value="<eos>", interactive=True, allow_custom_value=True)
+
+    input_elems.update({padding_token, unknown_token, eos_token, bos_token})
+    elem_dict.update(
+        dict(
+            padding_token=padding_token,
+            unknown_token=unknown_token,
+            bos_token=bos_token,
+            eos_token=eos_token,
+        )
+    )
+
+    with gr.Row():
+        special_tokens = gr.Textbox(label="其他特殊token，用空格分开即可", lines=3)
+    input_elems.update({special_tokens})
+    elem_dict.update(
+        dict(
+            special_tokens=special_tokens
+        )
+    )
 
 
 

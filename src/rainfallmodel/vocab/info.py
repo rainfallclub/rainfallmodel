@@ -21,16 +21,21 @@ def get_vocab_size(tokenizer:AutoTokenizer) -> int:
     return tokenizer.vocab_size
 
 def get_tokenizer(tokenizer_name:str) -> AutoTokenizer:
+    """
+    根据分词器的名称/路径获取分词器信息
+    """
     vocab = get_tokenizer_config()
-    if tokenizer_name not in vocab:
-        return None
     
-    tokenizer_item = vocab[tokenizer_name]
-    if tokenizer_item["type"] == "local_file_relative_path":
-        file_path = tokenizer_item["file_path"]
-        tokenizer_path = get_root_path() + "/" + file_path
-    elif tokenizer_item["type"] == "hugging_face_repo":
-        tokenizer_path = tokenizer_item["repo"]
+    if tokenizer_name in vocab:
+        tokenizer_item = vocab[tokenizer_name]
+        if tokenizer_item["type"] == "local_file_relative_path":
+            file_path = tokenizer_item["file_path"]
+            tokenizer_path = get_root_path() + "/" + file_path
+        elif tokenizer_item["type"] == "hugging_face_repo":
+            tokenizer_path = tokenizer_item["repo"]
+    else:
+        tokenizer_path = tokenizer_name
+    # print("tokenizer_path:", tokenizer_path)
     tokenizer = AutoTokenizer.from_pretrained(tokenizer_path)
     return tokenizer
 

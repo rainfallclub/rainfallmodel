@@ -43,10 +43,6 @@ class VocabRunner:
     def __init__(self, manager: "Manager") -> None:
         self.manager = manager
         self.trainer: Optional[Popen] = None
-        self.do_train = True
-        self.running_data: dict[Component, Any] = None
-        self.aborted = False
-        self.running = False
 
     def _validate_vocab(self, data: dict["Component", Any]) -> str:
         r"""Validate the configuration."""
@@ -69,11 +65,11 @@ class VocabRunner:
             gr.Warning(error)
             yield {output_box: error}
         else:
-            # self.do_train, self.running_data = do_train, data
+
             args = self._parse_train_args(data)
-            output_dir = args["vocab_output_dir"]
+            output_dir = args["output_dir"]
             os.makedirs(output_dir, exist_ok=True)
-            save_args(os.path.join(args["vocab_output_dir"], RAINFALLBOARD_CONFIG), self._build_config_dict(data))
+            save_args(os.path.join(args["output_dir"], RAINFALLBOARD_CONFIG), self._build_config_dict(data))
 
             env = deepcopy(os.environ)
 
@@ -86,9 +82,15 @@ class VocabRunner:
         r"""Build and validate the training arguments."""
         get = lambda elem_id: data[self.manager.get_elem_by_id(elem_id)]
         args = dict(
-            vocab_dataset_path = get("vocab.dataset_path"),
-            vocab_output_dir = get("vocab.output_dir"),
+            dataset_path = get("vocab.dataset_path"),
+            output_dir = get("vocab.output_dir"),
             vocab_size = get("vocab.vocab_size"),
+            padding_token = get("vocab.padding_token"),
+            unknown_token = get("vocab.unknown_token"),
+            eos_token = get("vocab.eos_token"),
+            bos_token = get("vocab.bos_token"),
+            special_tokens = get("vocab.special_tokens"),
+            min_frequency = get("vocab.min_frequency"),
         )
         return args
     
@@ -107,14 +109,6 @@ class VocabRunner:
         return config_dict
 
     
-
-
-
-
-
-
-
-
 
 
 

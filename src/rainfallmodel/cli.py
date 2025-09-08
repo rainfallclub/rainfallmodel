@@ -19,7 +19,7 @@
 import sys
 from functools import partial
 from .webui.interface import run_web_ui
-from .vocab.train import vocab_train
+from .vocab.vocab_train import do_vocab_train
 from .pretrain.default_trainer import do_pretrain
 from .misc.misc import test_args
 from .inference.inf import do_infer
@@ -54,7 +54,7 @@ def main():
         "infer": do_infer,
         "misc": test_args,
         "pretrain": do_pretrain,
-        "vocab": vocab_train,
+        "vocab": do_vocab_train,
         "webui": run_web_ui,
         "version": partial(print, WELCOME),
         "help": partial(print, USAGE),
