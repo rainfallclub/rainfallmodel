@@ -46,13 +46,11 @@ def get_llama_model(model_conf:dict) -> AutoModelForCausalLM:
         mlp_bias=bool(model_conf['mlp_bias']),
         hidden_act=model_conf['hidden_act'],
 
-
         vocab_size=int(model_conf['vocab_size']),
         bos_token_id=int(model_conf['bos_token_id']),
         eos_token_id=int(model_conf['eos_token_id']),
 
         rms_norm_eps=float(model_conf['rms_norm_eps']),
-
         rope_scaling=model_conf['rope_scaling'],
         rope_theta=float(model_conf['rope_theta']),
         
