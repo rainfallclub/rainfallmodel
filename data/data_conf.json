@@ -9,8 +9,12 @@
             "type": "hugging_face_repo"
         },
         "rainfall_pretrain_demo":{
-            "repo": "rainfullclub/pretrain_demo",
+            "repo": "rainfullclub/pretrain_dataset_hq_1",
             "type": "hugging_face_repo"
+        },
+        "sft_cog_demo1":{
+            "file_path":"data/dataset/sft_cog_demo1.json",
+            "type":"local_file_relative_path"
         }
     },
     "tokenizer":{
@@ -23,6 +27,17 @@
             "type": "hugging_face_repo"
         },
         "qwen3_tokenizer": {
+            "repo": "Qwen/Qwen3-0.6B",
+            "type": "hugging_face_repo"
+        }
+    },
+    "model":{
+        "rainfall_4m_base":{
+            "repo": "rainfullclub/rainfallmodeltest2",
+            "type": "hugging_face_repo"
+
+        },
+        "qwen3_0.6b": {
             "repo": "Qwen/Qwen3-0.6B",
             "type": "hugging_face_repo"
         }

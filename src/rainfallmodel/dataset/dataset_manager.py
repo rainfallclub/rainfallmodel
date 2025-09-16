@@ -17,7 +17,7 @@
 
 from torch.utils.data import Dataset
 from transformers import AutoTokenizer
-from .dataset_jsonl import get_local_json_format_dataset, get_hf_json_format_dataset
+from .dataset_pretrain_jsonl import get_pretrain_local_json_format_dataset, get_pretrain_hf_json_format_dataset
 from .dataset_vocab_train_jsonl import (
     get_hf_json_format_dataset_for_vocab_train,
     get_local_json_format_dataset_for_vocab_train
@@ -25,6 +25,7 @@ from .dataset_vocab_train_jsonl import (
 from torch.utils.data import  random_split
 from .dataset_conf import get_user_dataset_conf
 from .dataset_path_handler import check_need_remote
+from .dataset_sft_json import get_sft_local_json_format_dataset
 
 
 def train_eval_split(dataset:Dataset, dataset_conf:dict) -> tuple[Dataset, Dataset]:
@@ -57,9 +58,9 @@ def get_pretrain_dataset(tokenizer:AutoTokenizer, user_conf:dict) -> tuple[Datas
     dataset_conf['need_remote'] = need_remote
 
     if need_remote:
-        dataset = get_hf_json_format_dataset(tokenizer, dataset_conf)
+        dataset = get_pretrain_hf_json_format_dataset(tokenizer, dataset_conf)
     else:
-        dataset = get_local_json_format_dataset(tokenizer, dataset_conf)
+        dataset = get_pretrain_local_json_format_dataset(tokenizer, dataset_conf)
     return train_eval_split(dataset, dataset_conf)
 
 
@@ -88,6 +89,24 @@ def get_vocab_train_dataset(user_conf:dict) -> tuple[Dataset, Dataset]:
 
 
 
+
+def get_sft_dataset(tokenizer:AutoTokenizer, user_conf:dict) -> tuple[Dataset, Dataset]:
+    """
+    获取微调使用的数据集，目前暂时只支持json格式
+    这块后续会有较大的重构，暂时先这样实现
+    """
+
+    dataset_conf = get_user_dataset_conf(user_conf)
+
+    # 判断是否需要远程连接,
+    # 微调数据集暂不支持远程
+    # 暂时不支持验证集
+    # 判断是否需要远程连接
+    need_remote, dataset_path = check_need_remote(dataset_conf['dataset_path'])
+    dataset_conf['dataset_path'] = dataset_path
+    dataset_conf['need_remote'] = need_remote
+    
+    return get_sft_local_json_format_dataset(tokenizer, dataset_conf)
 
 
 

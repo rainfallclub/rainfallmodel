@@ -40,6 +40,9 @@ ALERTS = {
     "infer_backend_not_exist":{
         "zh": "后端模型缺失，无法生成文本，请先加载模型"
     },
+    "infer_backend_unload":{
+        "zh": "模型状态: 模型未加载"
+    },
 
     # 词表构建相关信息
     "vocab_dataset_not_exists": {
@@ -56,7 +59,15 @@ ALERTS = {
     },
     "err_no_path": {
         "zh": "模型未找到。",
-    }
+    },
+
+    # 微调时报错信息
+    "sft_model_path_not_exist":{
+        "zh": "模型未填写"
+    },
+    "sft_dataset_path_not_exist":{
+        "zh": "数据集未填写"
+    },
 }
 
 

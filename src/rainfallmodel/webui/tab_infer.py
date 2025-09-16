@@ -18,7 +18,8 @@
 from typing import TYPE_CHECKING
 from ..common.packages import is_gradio_available
 from .manager import Manager
-
+from .tab_infer_base import create_infer_base_tab
+from .tab_infer_chat import create_infer_chat_tab
 
 if is_gradio_available():
     import gradio as gr
@@ -28,49 +29,16 @@ if TYPE_CHECKING:
 
 
 def create_infer_tab(manager: "Manager") -> dict[str, "Component"]:
-    input_elems = manager.get_base_elems()
     elem_dict = dict()
-    with gr.Row():
-        model_path = gr.Textbox(label="模型路径", value="", interactive=True)
-        dtype_list = ["auto", "bfloat16", "float16", "float32"]
-        dtype = gr.Dropdown(choices=dtype_list, label="dtype类型", value="auto", interactive=True, visible=False)
-
-    with gr.Row():
-        load_model_btn = gr.Button(value="加载模型", variant="primary")
-        unload_model_btn = gr.Button(value="卸载模型")
-
-    info_box = gr.Textbox(value="模型状态: 模型未加载", interactive=False)
-
-    input_elems.update({model_path, dtype})
-    elem_dict.update(
-        dict(
-            model_path=model_path,
-            dtype=dtype,
-        )
-    )
-
-    load_model_btn.click(manager.infer_runner.load_model, inputs=input_elems, outputs=[info_box])
-    unload_model_btn.click(manager.infer_runner.unload_model, inputs=[], outputs=[info_box])
-
-    with gr.Column() as chat_box:
-        chatbot = gr.Chatbot(type="messages", show_copy_button=True)
-        messages = gr.State(value=[])
-        with gr.Row():
-            with gr.Column(scale=4):
-                query = gr.Textbox(label="用户输入", lines=3)
-                submit_btn = gr.Button(value="提交", variant="primary")
-
-            with gr.Column(scale=1):
-                max_new_tokens = gr.Slider(label="最大token数", minimum=8, maximum=8192, value=32, step=1)
-                top_p = gr.Slider(label="top-p值", minimum=0.01, maximum=1.0, value=0.7, step=0.01)
-                temperature = gr.Slider(label="温度系数", minimum=0.01, maximum=1.5, value=0.1, step=0.01)
-                clear_btn = gr.Button(value="清空")
+    with gr.Blocks():
+        with gr.Tab("续写模式[刚完成预训练的模型]"):
+            base_dict = create_infer_base_tab(manager)
+            elem_dict.update(base_dict)
+        with gr.Tab("聊天模式[以完成指令微调后的模型]"):
+            chat_dict = create_infer_chat_tab(manager)
+            elem_dict.update(chat_dict)
+    return elem_dict  
     
-    generate_inputs = [chatbot, messages, query, max_new_tokens, top_p, temperature]
-    submit_btn.click(manager.infer_runner.interface_generate, generate_inputs, [chatbot, messages, query])
-    clear_btn.click(lambda: ([], []), outputs=[chatbot, messages])
-
-    return elem_dict
 
 
 

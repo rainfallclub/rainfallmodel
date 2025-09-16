@@ -77,27 +77,101 @@ def create_train_tab(manager: "Manager") -> dict[str, "Component"]:
     gr.Markdown("---") 
     gr.Markdown("#### 模型结构配置")
     with gr.Row():
+        tie_word_embeddings_list = [True, False]
+        tie_word_embeddings = gr.Dropdown(choices=tie_word_embeddings_list, label="权重共享tie_word_embeddings", value=True, interactive=True)
+        use_cache_list = [True, False]
+        use_cache = gr.Dropdown(choices=use_cache_list, label="缓存use_cache", value=True, interactive=True)
         hidden_size_list =[256, 768, 1024, 4096]
-        hidden_size = gr.Dropdown(choices=hidden_size_list, label="隐藏层大小", value=256, interactive=True, allow_custom_value=True)
-        intermediate_size_list =[768, 3072, 4096, 11008]
-        intermediate_size = gr.Dropdown(choices=intermediate_size_list, label="中间层大小", value=768, interactive=True, allow_custom_value=True)
-        num_attention_heads_list =[12, 16, 32, 40]
-        num_attention_heads = gr.Dropdown(choices=num_attention_heads_list, label="注意力头数", value=16, interactive=True, allow_custom_value=True)
+        hidden_size = gr.Dropdown(choices=hidden_size_list, label="隐藏层大小hidden_size", value=256, interactive=True, allow_custom_value=True)
+        max_position_embeddings_list =[512, 1024, 2048, 4096]
         num_hidden_layers_list =[4, 12, 24, 32]
-        num_hidden_layers = gr.Dropdown(choices=num_hidden_layers_list, label="Transformer块层数", value=4, interactive=True, allow_custom_value=True)
-        num_key_value_heads_list =[2, 8]
-        num_key_value_heads = gr.Dropdown(choices=num_key_value_heads_list, label="kv头数", value=8, interactive=True, allow_custom_value=True)
-    
-    input_elems.update({hidden_size, intermediate_size, num_attention_heads, num_hidden_layers, num_key_value_heads})
+        num_hidden_layers = gr.Dropdown(choices=num_hidden_layers_list, label="Transformer块层数num_hidden_layers", value=4, interactive=True, allow_custom_value=True) 
+        max_position_embeddings = gr.Dropdown(choices=max_position_embeddings_list, label="最大位置编码max_position_embeddings", value=2048, interactive=True, allow_custom_value=True)
+        initializer_range = gr.Textbox(label="初始化initializer_range", value="0.02", interactive=True)
+    input_elems.update({tie_word_embeddings, use_cache, hidden_size,num_hidden_layers, max_position_embeddings, initializer_range})
     elem_dict.update(
         dict(
-            hidden_size=hidden_size, 
-            intermediate_size=intermediate_size, 
-            num_attention_heads=num_attention_heads,
+            tie_word_embeddings=tie_word_embeddings, 
+            use_cache=use_cache, 
+            hidden_size=hidden_size,
             num_hidden_layers=num_hidden_layers,
-            num_key_value_heads=num_key_value_heads
+            max_position_embeddings=max_position_embeddings,
+            initializer_range=initializer_range
         )
-    )    
+    ) 
+
+    with gr.Row(): 
+        num_attention_heads_list =[12, 16, 32, 40]
+        num_attention_heads = gr.Dropdown(choices=num_attention_heads_list, label="注意力头数num_attention_heads", value=16, interactive=True, allow_custom_value=True)
+        num_key_value_heads_list =[2, 8]
+        num_key_value_heads = gr.Dropdown(choices=num_key_value_heads_list, label="kv头数num_key_value_heads", value=8, interactive=True, allow_custom_value=True)
+        attention_dropout = gr.Textbox(label="注意力层丢弃率attention_dropout", value="0.0", interactive=True)
+        attention_bias_list = [True, False]
+        attention_bias = gr.Dropdown(choices=attention_bias_list, label="注意力偏置attention_bias", value=False, interactive=True)
+    input_elems.update({num_attention_heads, num_key_value_heads, attention_dropout, attention_bias})
+    elem_dict.update(
+        dict(
+            num_attention_heads=num_attention_heads, 
+            num_key_value_heads=num_key_value_heads,
+            attention_dropout=attention_dropout,
+            attention_bias=attention_bias
+        )
+    )  
+    with gr.Row():
+        intermediate_size_list =[768, 3072, 4096, 11008]
+        intermediate_size = gr.Dropdown(choices=intermediate_size_list, label="中间层大小intermediate_size", value=768, interactive=True, allow_custom_value=True)
+        mlp_bias_list = [True, False]
+        mlp_bias = gr.Dropdown(choices=mlp_bias_list, label="mlp偏置mlp_bias", value=False, interactive=True)
+        hidden_act_list = ["gelu", "gelu_new", "gelu_fast", "gelu_pytorch_tanh", "swish","relu","glu", "silu", "tanh", "quick_gelu"	 ]
+        hidden_act = gr.Dropdown(choices=hidden_act_list, label="隐藏层激活函数hidden_act", value="silu", interactive=True)
+    
+    input_elems.update({intermediate_size, mlp_bias, hidden_act})
+    elem_dict.update(
+        dict(
+            intermediate_size=intermediate_size, 
+            mlp_bias=mlp_bias,
+            hidden_act=hidden_act,
+        )
+    )
+    with gr.Row():
+        rms_norm_eps = gr.Textbox(label="RMS归一化防除零配置rms_norm_eps", value=1e-6, interactive=True)
+        rope_scaling = gr.Textbox(label="RoPE缩放配置(仅支持json格式)rope_scaling", value="", interactive=True)
+        rope_theta = gr.Textbox(label="RoPE基值rope_theta", value=10000.0, interactive=True)
+
+        
+    input_elems.update({rms_norm_eps, rope_scaling, rope_theta})
+    elem_dict.update(
+        dict(
+            rms_norm_eps=rms_norm_eps, 
+            rope_scaling=rope_scaling,
+            rope_theta=rope_theta,
+        )
+    )  
+
+    # 暂时先注释掉上一个版本的配置，后续再删掉    
+    # with gr.Row():
+    #     hidden_size_list =[256, 768, 1024, 4096]
+    #     hidden_size = gr.Dropdown(choices=hidden_size_list, label="隐藏层大小", value=256, interactive=True, allow_custom_value=True)
+    #     intermediate_size_list =[768, 3072, 4096, 11008]
+    #     intermediate_size = gr.Dropdown(choices=intermediate_size_list, label="中间层大小", value=768, interactive=True, allow_custom_value=True)
+    #     num_attention_heads_list =[12, 16, 32, 40]
+    #     num_attention_heads = gr.Dropdown(choices=num_attention_heads_list, label="注意力头数", value=16, interactive=True, allow_custom_value=True)
+    #     num_hidden_layers_list =[4, 12, 24, 32]
+    #     num_hidden_layers = gr.Dropdown(choices=num_hidden_layers_list, label="Transformer块层数", value=4, interactive=True, allow_custom_value=True)
+    #     num_key_value_heads_list =[2, 8]
+    #     num_key_value_heads = gr.Dropdown(choices=num_key_value_heads_list, label="kv头数", value=8, interactive=True, allow_custom_value=True)
+    
+    # input_elems.update({hidden_size, intermediate_size, num_attention_heads, num_hidden_layers, num_key_value_heads})
+    # elem_dict.update(
+    #     dict(
+    #         hidden_size=hidden_size, 
+    #         intermediate_size=intermediate_size, 
+    #         num_attention_heads=num_attention_heads,
+    #         num_hidden_layers=num_hidden_layers,
+    #         num_key_value_heads=num_key_value_heads
+    #     )
+    # )    
+    
 
     gr.Markdown("---") 
     gr.Markdown("#### 数据加载与计算部分(请参考机器配置)")

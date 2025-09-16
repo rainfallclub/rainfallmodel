@@ -25,7 +25,19 @@ class InferInterface:
         self.backend = BackendHf(model_path)
     
     def infer_generate(self, query: str, max_new_tokens: int, top_p: float, temperature: float) -> str:
+        """
+        普通推理模式
+        """
         return self.backend.generate(query, max_new_tokens, top_p, temperature)
+    
+
+    def infer_chat(self, query: str, max_new_tokens: int, top_p: float, temperature: float) -> str:
+        """
+        聊天模式
+        """
+        return self.backend.chat(query, max_new_tokens, top_p, temperature)
+
+        
 
 
 

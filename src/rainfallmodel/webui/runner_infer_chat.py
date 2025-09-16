@@ -32,7 +32,7 @@ if TYPE_CHECKING:
     from gradio.components import Component
     from .manager import Manager
 
-class InferRunner(InferInterface):
+class InferChatRunner(InferInterface):
     r"""A class to manage the running status."""
 
     def __init__(self, manager: "Manager") -> None:
@@ -40,6 +40,9 @@ class InferRunner(InferInterface):
 
     @property
     def loaded(self) -> bool:
+        has_backend =  hasattr(self, 'backend')
+        if not has_backend:
+            return False
         return self.backend is not None
 
     def load_model(self, data) -> Generator:
@@ -61,7 +64,7 @@ class InferRunner(InferInterface):
         yield ALERTS["infer_backend_unloaded"][lang]
 
 
-    def interface_generate(
+    def interface_chat(
         self, 
         chatbot: list[dict[str, str]], 
         messages: list[dict[str, str]], 
@@ -85,7 +88,7 @@ class InferRunner(InferInterface):
         chatbot.append({"role": "user", "content": query})
         messages = messages + [{"role": "user", "content": query}]
         messages.append({"role": "user", "content": query})
-        response = self.infer_generate(query, max_new_tokens, top_p, temperature)
+        response = self.infer_chat(query, max_new_tokens, top_p, temperature)
         chatbot.append({"role": "assistant", "content": response})
         return chatbot, messages, ""
         

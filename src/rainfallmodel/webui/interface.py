@@ -23,6 +23,8 @@ from .tab_vocab_info import create_vocab_info_tab
 from .tab_infer import create_infer_tab
 from .tab_top import create_top
 from .tab_todo import create_todo_tab
+from .tab_sft import create_sft_tab
+from .tab_distill import create_distill_tab
 from .manager import Manager
 from ..common.misc import is_env_enabled, fix_proxy
 
@@ -53,14 +55,14 @@ def create_ui() -> "gr.Blocks":
             manager.add_elems("vocab", create_vocab_train_tab(manager))
         with gr.Tab("词表检查"):
             manager.add_elems("vocab_info", create_vocab_info_tab(manager))
-        with gr.Tab("模型微调"):
-            manager.add_elems("ft", create_todo_tab(manager))
         with gr.Tab("模型推理"):
             manager.add_elems("infer", create_infer_tab(manager))
+        with gr.Tab("模型微调"):
+            manager.add_elems("sft", create_sft_tab(manager))
         with gr.Tab("模型蒸馏"):
-            manager.add_elems("distill", create_todo_tab(manager))
-        with gr.Tab("模型量化"):
-            manager.add_elems("quan", create_todo_tab(manager))
+            manager.add_elems("distill", create_distill_tab(manager))
+        # with gr.Tab("模型量化"):
+        #     manager.add_elems("quan", create_todo_tab(manager)) 暂时先不做这种
         with gr.Tab("数据集处理"):
             manager.add_elems("data", create_todo_tab(manager))
 

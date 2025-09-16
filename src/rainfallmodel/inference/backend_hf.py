@@ -29,6 +29,34 @@ class BackendHf:
         self.model = AutoModelForCausalLM.from_pretrained(model_path).to(device).eval()
 
     def generate(self, query: str, max_new_tokens: int, top_p: float, temperature: float) -> str:
+        generation_config = self.get_generation_config(max_new_tokens, top_p, temperature)
+        inputs = self.tokenizer(query, return_tensors="pt").to(self.model.device)
+        outputs = self.model.generate(inputs["input_ids"], generation_config=generation_config)
+        result = self.tokenizer.decode(outputs[0], skip_special_tokens=True)
+        return result
+    
+
+    def chat(self, query: str, max_new_tokens: int, top_p: float, temperature: float) -> str:
+        """
+        聊天模式，先这么实现，后续肯定要重构
+        """
+        messages = [{"role": "user", "content": query}]
+
+        text = self.tokenizer.apply_chat_template(
+            messages,
+            tokenize=False,
+            add_generation_prompt=True
+        )
+        generation_config = self.get_generation_config(max_new_tokens, top_p, temperature)
+        inputs = self.tokenizer(text, return_tensors="pt").to(self.model.device)
+        outputs = self.model.generate(inputs["input_ids"], generation_config=generation_config)
+        outputs = outputs[0][len(inputs.input_ids[0]):].tolist()
+        result = self.tokenizer.decode(outputs, skip_special_tokens=True)
+        return result
+    
+
+
+    def get_generation_config(self, max_new_tokens: int, top_p: float, temperature: float) -> GenerationConfig:
         generation_config = GenerationConfig(
             bos_token_id=self.tokenizer.bos_token_id or self.tokenizer.cls_token_id,
             eos_token_id=self.tokenizer.eos_token_id,
@@ -38,10 +66,7 @@ class BackendHf:
             top_p = top_p,
             temperature = temperature
         )        
-        inputs = self.tokenizer(query, return_tensors="pt").to(self.model.device)
-        outputs = self.model.generate(inputs["input_ids"], generation_config=generation_config)
-        result = self.tokenizer.decode(outputs[0], skip_special_tokens=True)
-        return result
+        return generation_config
         
 
 

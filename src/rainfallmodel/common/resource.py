@@ -49,6 +49,14 @@ def get_tokenizer_config() -> dict:
     data = get_data_config()
     return data["tokenizer"]
 
+def get_model_config() -> dict:
+    """
+    获取内置数据集的配置
+    """
+    data = get_data_config()
+    return data["model"]
+
+
 def get_output_path() -> str:
     """
     获取输出目录，自动生成，根据当前时间设置

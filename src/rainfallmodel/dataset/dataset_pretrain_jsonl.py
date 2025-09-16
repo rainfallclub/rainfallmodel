@@ -37,7 +37,7 @@ def process_func(example: Dict[str, List], tokenizer: AutoTokenizer, dataset_con
         "attention_mask": new_attn_mask_list
     }
 
-def get_local_json_format_dataset(tokenizer:AutoTokenizer, dataset_conf:dict):
+def get_pretrain_local_json_format_dataset(tokenizer:AutoTokenizer, dataset_conf:dict):
     """
     加载数据文件并使用指定的分词器进行处理
     """
@@ -52,7 +52,7 @@ def get_local_json_format_dataset(tokenizer:AutoTokenizer, dataset_conf:dict):
 
 
 
-def get_hf_json_format_dataset(tokenizer:AutoTokenizer, dataset_conf:dict):
+def get_pretrain_hf_json_format_dataset(tokenizer:AutoTokenizer, dataset_conf:dict):
     """
     加载hugging face的数据文件并使用指定的分词器进行处理
     """

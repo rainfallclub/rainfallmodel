@@ -92,7 +92,7 @@ def do_pretrain(args: Optional[dict[str, Any]] = None) -> None:
     # 第二步，加载模型和分词
     tokenizer_path = user_conf["tokenizer_path"]
     tokenizer = get_tokenizer(tokenizer_path)
-    model = get_pretrain_model(user_conf)
+    model = get_pretrain_model(user_conf, tokenizer)
     print(f'模型参数量为：{sum(p.numel() for p in model.parameters() if p.requires_grad)}')
 
     # 第三步，处理数据集

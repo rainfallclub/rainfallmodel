@@ -48,47 +48,64 @@ class SftRunner:
         self.aborted = False
         self.running = False
 
-    def _validate_vocab(self, data: dict["Component", Any]) -> str:
+    def _validate_param(self, data: dict["Component", Any]) -> str:
         r"""Validate the configuration."""
         lang = self.manager.get_lang()
         get = lambda elem_id: data[self.manager.get_elem_by_id(elem_id)]
 
-        dataset_path = get("vocab.dataset_path")
+        model_path = get("sft.model_path")
+        if not model_path:
+            return ALERTS["sft_model_path_not_exist"][lang]
+
+        dataset_path = get("sft.dataset_path")
         if not dataset_path:
-            return ALERTS["vocab_dataset_not_exists"][lang]
+            return ALERTS["sft_dataset_path_not_exist"][lang]
 
         return ""
 
     
     def _launch(self, data: dict["Component", Any]) -> Generator[dict["Component", Any], None, None]:
         r"""Start the process."""
-        output_box = self.manager.get_elem_by_id("vocab.output_box")
-        error = self._validate_vocab(data)
+        output_box = self.manager.get_elem_by_id("sft.output_box")
+        error = self._validate_param(data)
 
         if error:
             gr.Warning(error)
             yield {output_box: error}
         else:
-            # self.do_train, self.running_data = do_train, data
-            args = self._parse_train_args(data)
-            output_dir = args["vocab_output_dir"]
+            args = self._parse_sft_args(data)
+            output_dir = args["output_dir"]
             os.makedirs(output_dir, exist_ok=True)
-            save_args(os.path.join(args["vocab_output_dir"], RAINFALLBOARD_CONFIG), self._build_config_dict(data))
+            save_args(os.path.join(args["output_dir"], RAINFALLBOARD_CONFIG), self._build_config_dict(data))
 
             env = deepcopy(os.environ)
 
             # NOTE: DO NOT USE shell=True to avoid security risk
-            self.trainer = Popen(["rainfallmodel", "vocab", save_cmd(args, output_dir, VACAB_ARG_CONF_FILE_NAME)], env=env)
+            self.trainer = Popen(["rainfallmodel", "sft", save_cmd(args, output_dir, VACAB_ARG_CONF_FILE_NAME)], env=env)
             # todo，实现监控功能
             # yield from self.monitor()
 
-    def _parse_train_args(self, data: dict["Component", Any]) -> dict[str, Any]:
-        r"""Build and validate the training arguments."""
+    def _parse_sft_args(self, data: dict["Component", Any]) -> dict[str, Any]:
+        r"""Build and validate the sft arguments."""
         get = lambda elem_id: data[self.manager.get_elem_by_id(elem_id)]
         args = dict(
-            vocab_dataset_path = get("vocab.dataset_path"),
-            vocab_output_dir = get("vocab.output_dir"),
-            vocab_size = get("vocab.vocab_size"),
+            model_path = get("sft.model_path"),
+            dataset_path = get("sft.dataset_path"),
+            output_dir = get("sft.output_dir"),
+            ft_type = get("sft.ft_type"),
+            lora_rank = get("sft.lora_rank"),
+            lora_alpha = get("sft.lora_alpha"),
+            lora_target_modules = get("sft.lora_target_modules"),
+            batch_size = get("sft.batch_size"),
+            epochs = get("sft.epochs"),
+            learning_rate = get("sft.learning_rate"),
+            gradient_accumulation_steps = get("sft.gradient_accumulation_steps"),
+            lr_scheduler_type = get("sft.lr_scheduler_type"),
+            save_total_limit = get("sft.save_total_limit"),
+            logging_steps = get("sft.logging_steps"),
+            use_swanlab = get("sft.use_swanlab"),
+            swanlab_project_name = get("sft.swanlab_project_name"),
+            swanlab_experiment_name = get("sft.swanlab_experiment_name"),
         )
         return args
     
