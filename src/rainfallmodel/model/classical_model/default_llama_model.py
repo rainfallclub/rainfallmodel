@@ -55,6 +55,8 @@ def get_llama_model(model_conf:dict) -> AutoModelForCausalLM:
         rope_theta=float(model_conf['rope_theta']),
         
     )
+
+    
     model = AutoModelForCausalLM.from_config(
         config,
         torch_dtype=model_conf['dtype']
