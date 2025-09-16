@@ -82,10 +82,10 @@ def create_sft_tab(manager: "Manager") -> dict[str, "Component"]:
     gr.Markdown("---") 
     gr.Markdown("#### 数据加载与计算部分(请参考机器配置)")
     with gr.Row():
-        batch_size = gr.Textbox(label="训练批次batch_size", value=4, interactive=True)
+        batch_size = gr.Textbox(label="训练批次batch_size", value=1, interactive=True)
         epochs = gr.Textbox(label="训练轮次epoch", value=3, interactive=True)
         learning_rate = gr.Textbox(label="学习率learning_rate", value='2e-4', interactive=True)
-        gradient_accumulation_steps = gr.Textbox(label="梯度累积步数", value=4, interactive=True)
+        gradient_accumulation_steps = gr.Textbox(label="梯度累积步数", value=1, interactive=True)
         lr_scheduler_type = gr.Textbox(label="学习率调整策略lr_scheduler_type", value='cosine', interactive=True)
     
     input_elems.update({batch_size, epochs, learning_rate, gradient_accumulation_steps, lr_scheduler_type})
