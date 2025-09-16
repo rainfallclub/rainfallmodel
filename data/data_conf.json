@@ -19,7 +19,7 @@
     },
     "tokenizer":{
         "minimind_tokenizer": {
-            "file_path": "data/tokenizer/default",
+            "file_path": "data/tokenizer/minimind",
             "type":"local_file_relative_path"
         },
         "qwen2_tokenizer": {

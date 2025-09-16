@@ -199,7 +199,7 @@ def create_train_tab(manager: "Manager") -> dict[str, "Component"]:
         save_total_limit = gr.Textbox(label="共计保存限制", value=5, interactive=True)
         save_steps = gr.Textbox(label="每多少步保存一次", value=1000, interactive=True)
         save_safetensors_list = [True, False]
-        save_safetensors = gr.Dropdown(choices=save_safetensors_list, label="是否使用SafeTensor格式", value=False, interactive=True)
+        save_safetensors = gr.Dropdown(choices=save_safetensors_list, label="是否使用safetensors格式", value=False, interactive=True)
        
     input_elems.update({save_total_limit, save_steps, save_safetensors})
     elem_dict.update(

@@ -23,6 +23,8 @@ class InferInterface:
         """
         print("model_path:  ", model_path)
         self.backend = BackendHf(model_path)
+
+    
     
     def infer_generate(self, query: str, max_new_tokens: int, top_p: float, temperature: float) -> str:
         """

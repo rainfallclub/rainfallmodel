@@ -67,7 +67,17 @@ def get_output_path() -> str:
     return root_path + "/output/" + time_suffix
 
 
-
+def get_real_model_path(model_path: str) -> str:
+    """
+    根据model_path判断是否是一个配置项
+    如果是一个配置项，则获取配置值
+    """
+    model_dict = get_model_config()
+    if model_path not in model_dict:
+        return model_path
+    
+    model_conf = model_dict[model_path]
+    return model_conf['repo']
 
 
 

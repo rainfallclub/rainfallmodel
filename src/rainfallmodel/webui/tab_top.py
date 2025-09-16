@@ -30,8 +30,8 @@ if TYPE_CHECKING:
 
 def create_top() -> dict[str, "Component"]:
     with gr.Row():
-        lang = gr.Dropdown(label="语言选择", choices=["en", "zh",], interactive=True, value="zh")
-        hf_mirror = gr.Dropdown(label="hf镜像选择",choices=["hf_mirror","none"], interactive=True, value="hf_mirror")
+        lang = gr.Dropdown(label="语言选择", choices=["en", "zh",], interactive=True, value="zh", visible=False)
+        hf_mirror = gr.Dropdown(label="hf镜像选择",choices=["hf_mirror","none"], interactive=True, value="hf_mirror", visible=False)
     
 
     return dict(

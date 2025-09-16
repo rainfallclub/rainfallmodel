@@ -15,7 +15,7 @@
 
 from transformers import AutoModelForCausalLM, GenerationConfig, AutoTokenizer
 from ..common.env import get_default_device
-
+from ..common.resource import get_real_model_path
 
 class BackendHf:
     """
@@ -25,8 +25,9 @@ class BackendHf:
 
     def __init__(self, model_path: str):
         device = get_default_device()
-        self.tokenizer = AutoTokenizer.from_pretrained(model_path)
-        self.model = AutoModelForCausalLM.from_pretrained(model_path).to(device).eval()
+        real_model_path = get_real_model_path(model_path)
+        self.tokenizer = AutoTokenizer.from_pretrained(real_model_path)
+        self.model = AutoModelForCausalLM.from_pretrained(real_model_path).to(device).eval()
 
     def generate(self, query: str, max_new_tokens: int, top_p: float, temperature: float) -> str:
         generation_config = self.get_generation_config(max_new_tokens, top_p, temperature)

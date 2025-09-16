@@ -18,6 +18,7 @@
 from typing import TYPE_CHECKING
 from ..common.packages import is_gradio_available
 from .manager import Manager
+from ..common.resource import get_model_config
 
 
 if is_gradio_available():
@@ -31,7 +32,10 @@ def create_infer_base_tab(manager: "Manager") -> dict[str, "Component"]:
     input_elems = manager.get_base_elems()
     elem_dict = dict()
     with gr.Row():
-        base_model_path = gr.Textbox(label="模型路径", value="", interactive=True)
+        model_list = get_model_config()
+        base_model_path = gr.Dropdown(choices=model_list, label="模型路径(可以选择已有模型，也可以输入本地路径)", value="rainfall_4m_base", interactive=True, allow_custom_value=True)
+
+        # base_model_path = gr.Textbox(label="模型路径", value="", interactive=True)
         base_dtype_list = ["auto", "bfloat16", "float16", "float32"]
         base_dtype = gr.Dropdown(choices=base_dtype_list, label="dtype类型", value="auto", interactive=True, visible=False)
 
