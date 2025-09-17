@@ -60,7 +60,7 @@ def create_ui() -> "gr.Blocks":
         with gr.Tab("模型微调"):
             manager.add_elems("sft", create_sft_tab(manager))
         with gr.Tab("模型蒸馏"):
-            manager.add_elems("distill", create_distill_tab(manager))
+            manager.add_elems("distill", create_todo_tab(manager))
         # with gr.Tab("模型量化"):
         #     manager.add_elems("quan", create_todo_tab(manager)) 暂时先不做这种
         with gr.Tab("数据集处理"):

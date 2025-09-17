@@ -22,7 +22,13 @@ default_sft_conf = {
     "model_path": "",
     "output_dir": "./output",
     "dataset_path": "", 
+
+    #微调参数部分
     'ft_type': 'full', # full表示全量微调、freeze表示冻结后的全量微调、LoRA表示高效微调
+    "lora_rank": 8,
+    "lora_alpha": 16,
+    "lora_target_modules": [], # 这里是一个列表，需要进行一下转换
+    "lora_dropout": 0.0,
 
     # 数据加载部分
     "batch_size": 1, 
@@ -61,4 +67,22 @@ def get_user_sft_conf(user_conf:dict) -> dict:
     """
     default_sft_conf['device'] = get_default_device()
     default_sft_conf.update(user_conf)
+
+    # 把用逗号分割的字符串转成列表
+    lora_target_modules_str = default_sft_conf['lora_target_modules']
+    default_sft_conf['lora_target_modules'] = comma_string_to_list(lora_target_modules_str)
+    
+
     return default_sft_conf
+
+
+
+def comma_string_to_list(input_string:str) -> list:
+    """
+    将逗号分隔的字符串转换为列表
+    """
+    items = input_string.split(",")
+    items = [item.strip() for item in items]
+    items = [item for item in items if item]
+    return items
+

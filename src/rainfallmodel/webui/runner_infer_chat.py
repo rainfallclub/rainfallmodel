@@ -50,8 +50,9 @@ class InferChatRunner(InferInterface):
         yield ALERTS["infer_backend_loading"][lang]
         get = lambda elem_id: data[self.manager.get_elem_by_id(elem_id)]
         model_path = get("infer.model_path")
+        lora_path = get("infer.lora_path")
         # 暂时不做重复性校验
-        super().__init__(model_path)
+        super().__init__(model_path, lora_path)
         yield ALERTS["infer_backend_loaded"][lang]
 
     

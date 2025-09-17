@@ -17,12 +17,12 @@ from .backend_hf import BackendHf
 
 class InferInterface:
 
-    def __init__(self, model_path:str):
+    def __init__(self, model_path:str, lora_path: str):
         """
-        初始化后端推理，目前仅支持huggingface
+        初始化后端推理，目前仅支持huggingface生态
         """
-        print("model_path:  ", model_path)
-        self.backend = BackendHf(model_path)
+        # print("model_path:  ", model_path)
+        self.backend = BackendHf(model_path, lora_path)
 
     
     

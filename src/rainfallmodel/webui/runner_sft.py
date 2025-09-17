@@ -96,6 +96,7 @@ class SftRunner:
             lora_rank = get("sft.lora_rank"),
             lora_alpha = get("sft.lora_alpha"),
             lora_target_modules = get("sft.lora_target_modules"),
+            lora_dropout=get("sft.lora_dropout"),
             batch_size = get("sft.batch_size"),
             epochs = get("sft.epochs"),
             learning_rate = get("sft.learning_rate"),

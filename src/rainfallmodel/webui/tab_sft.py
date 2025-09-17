@@ -65,7 +65,7 @@ def create_sft_tab(manager: "Manager") -> dict[str, "Component"]:
         lora_rank = gr.Dropdown(choices=lora_rank_list, label="LoRA秩rank",  value=8, interactive=True, allow_custom_value=True)
         lora_alpha_list = [4, 8, 16, 32, 64]
         lora_alpha = gr.Dropdown(choices=lora_alpha_list, label="LoRA alpha",  value=16, interactive=True, allow_custom_value=True)
-        lora_target_modules = gr.Textbox(label="生效模块", value="", interactive=True)
+        lora_target_modules = gr.Textbox(label="生效模块(用逗号分割)", value="q_proj,k_proj,v_proj,o_proj", interactive=True)
         lora_dropout = gr.Textbox(label="LoRA dropout", value=0.0, interactive=True)
 
     input_elems.update({ft_type,lora_rank,lora_alpha,lora_target_modules,lora_dropout})
@@ -84,9 +84,9 @@ def create_sft_tab(manager: "Manager") -> dict[str, "Component"]:
     with gr.Row():
         batch_size = gr.Textbox(label="训练批次batch_size", value=1, interactive=True)
         epochs = gr.Textbox(label="训练轮次epoch", value=3, interactive=True)
-        learning_rate = gr.Textbox(label="学习率learning_rate", value='2e-4', interactive=True)
-        gradient_accumulation_steps = gr.Textbox(label="梯度累积步数", value=1, interactive=True)
-        lr_scheduler_type = gr.Textbox(label="学习率调整策略lr_scheduler_type", value='cosine', interactive=True)
+        learning_rate = gr.Textbox(label="学习率learning_rate", value='1e-4', interactive=True)
+        gradient_accumulation_steps = gr.Textbox(label="梯度累积步数", value=4, interactive=True)
+        lr_scheduler_type = gr.Textbox(label="学习率调整策略lr_scheduler_type", value='linear', interactive=True)
     
     input_elems.update({batch_size, epochs, learning_rate, gradient_accumulation_steps, lr_scheduler_type})
     elem_dict.update(
@@ -102,8 +102,8 @@ def create_sft_tab(manager: "Manager") -> dict[str, "Component"]:
     gr.Markdown("---") 
     gr.Markdown("#### 模型保存部分")
     with gr.Row():
-        save_total_limit = gr.Textbox(label="共计保存限制", value=5, interactive=True)
-        save_steps = gr.Textbox(label="每多少步保存一次", value=1000, interactive=True)
+        save_total_limit = gr.Textbox(label="共计保存限制", value=3, interactive=True)
+        save_steps = gr.Textbox(label="每多少步保存一次", value=50, interactive=True)
        
     input_elems.update({save_total_limit, save_steps})
     elem_dict.update(
@@ -131,7 +131,7 @@ def create_sft_tab(manager: "Manager") -> dict[str, "Component"]:
         #         )
         with gr.Tab("日志&监控配置"):
              with gr.Row():
-                logging_steps = gr.Textbox(label="每多少步记录一次日志", value=10, interactive=True)
+                logging_steps = gr.Textbox(label="每多少步记录一次日志", value=1, interactive=True)
                 use_swanlab_list = [True, False]
                 use_swanlab = gr.Dropdown(choices=use_swanlab_list, label="是否使用Swanlab", value=True, interactive=True)
                 swanlab_project_name = gr.Textbox(label="swanlab项目名", value="rainfall_sft_project", interactive=True)

@@ -19,6 +19,7 @@ from typing import TYPE_CHECKING
 from ..common.packages import is_gradio_available
 from .manager import Manager
 from .locales import ALERTS
+from ..common.resource import get_model_config
 
 if is_gradio_available():
     import gradio as gr
@@ -31,7 +32,12 @@ def create_infer_chat_tab(manager: "Manager") -> dict[str, "Component"]:
     input_elems = manager.get_base_elems()
     elem_dict = dict()
     with gr.Row():
-        model_path = gr.Textbox(label="模型路径", value="", interactive=True)
+        model_list = get_model_config()
+        model_path = gr.Dropdown(choices=model_list, label="模型路径(可以选择已有模型，也可以输入本地路径)", value="rainfall_4m_base", interactive=True, allow_custom_value=True)
+
+        lora_path = gr.Textbox(label="LoRA路径", value="", interactive=True)
+
+
         dtype_list = ["auto", "bfloat16", "float16", "float32"]
         dtype = gr.Dropdown(choices=dtype_list, label="dtype类型", value="auto", interactive=True, visible=False)
 
@@ -50,10 +56,11 @@ def create_infer_chat_tab(manager: "Manager") -> dict[str, "Component"]:
 
     info_box = gr.Textbox(model_status, interactive=False)
 
-    input_elems.update({model_path, dtype})
+    input_elems.update({model_path, lora_path, dtype})
     elem_dict.update(
         dict(
             model_path=model_path,
+            lora_path=lora_path,
             dtype=dtype,
         )
     )

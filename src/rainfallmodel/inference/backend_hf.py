@@ -16,6 +16,7 @@
 from transformers import AutoModelForCausalLM, GenerationConfig, AutoTokenizer
 from ..common.env import get_default_device
 from ..common.resource import get_real_model_path
+from peft import PeftModel
 
 class BackendHf:
     """
@@ -23,11 +24,16 @@ class BackendHf:
     目前只有这一个实现，后续会支持更多实现
     """
 
-    def __init__(self, model_path: str):
+    def __init__(self, model_path: str, lora_path: str):
         device = get_default_device()
         real_model_path = get_real_model_path(model_path)
         self.tokenizer = AutoTokenizer.from_pretrained(real_model_path)
-        self.model = AutoModelForCausalLM.from_pretrained(real_model_path).to(device).eval()
+        base_model = AutoModelForCausalLM.from_pretrained(real_model_path)
+        if lora_path:
+            peft_model = PeftModel.from_pretrained(base_model, lora_path).to(device).eval()
+            self.model = peft_model
+        else:
+            self.model = base_model.to(device).eval()
 
     def generate(self, query: str, max_new_tokens: int, top_p: float, temperature: float) -> str:
         generation_config = self.get_generation_config(max_new_tokens, top_p, temperature)
@@ -41,7 +47,9 @@ class BackendHf:
         """
         聊天模式，先这么实现，后续肯定要重构
         """
-        messages = [{"role": "user", "content": query}]
+        messages = [
+            {"role": "user", "content": query}
+        ]
 
         text = self.tokenizer.apply_chat_template(
             messages,
@@ -58,6 +66,9 @@ class BackendHf:
 
 
     def get_generation_config(self, max_new_tokens: int, top_p: float, temperature: float) -> GenerationConfig:
+        """
+        获取内容生成配置
+        """
         generation_config = GenerationConfig(
             bos_token_id=self.tokenizer.bos_token_id or self.tokenizer.cls_token_id,
             eos_token_id=self.tokenizer.eos_token_id,

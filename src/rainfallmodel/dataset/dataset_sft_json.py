@@ -19,9 +19,19 @@ from datasets import Dataset
 
 def process_func(example, tokenizer, dataset_conf:dict) -> dict:
     input_ids, attention_mask, labels = [], [], []
-    instruction = tokenizer(
-        f"<|im_start|>system\n{example['instruction']}<|im_end|>\n<|im_start|>user\n{example['input']}<|im_end|>\n<|im_start|>assistant\n",
-        add_special_tokens=False,
+    # instruction = tokenizer(
+    #     f"<|im_start|>system\n{example['instruction']}<|im_end|>\n<|im_start|>user\n{example['input']}<|im_end|>\n<|im_start|>assistant\n",
+    #     add_special_tokens=False,
+    # )
+    messages = [
+        {"role": "system", "content": example['instruction']},
+        {"role": "user", "content": example['input']}
+    ]
+    instruction = tokenizer.apply_chat_template(
+        messages,
+        tokenize=True,
+        add_generation_prompt=True,  # 自动添加assistant开始标记
+        return_dict=True
     )
     response = tokenizer(f"{example['output']}", add_special_tokens=False)
     input_ids = instruction["input_ids"] + response["input_ids"] + [tokenizer.pad_token_id]
