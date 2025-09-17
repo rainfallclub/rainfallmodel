@@ -20,7 +20,7 @@ from .sft_config import get_user_sft_conf
 
 def do_sft(args: Optional[dict[str, Any]] = None) -> None:
     """
-    微调主流程，目前仅支持全量微调
+    微调主流程，支持全量微调和LoRA微调
     """
 
     print("sft begin!!")
