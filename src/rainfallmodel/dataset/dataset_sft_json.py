@@ -19,10 +19,6 @@ from datasets import Dataset
 
 def process_func(example, tokenizer, dataset_conf:dict) -> dict:
     input_ids, attention_mask, labels = [], [], []
-    # instruction = tokenizer(
-    #     f"<|im_start|>system\n{example['instruction']}<|im_end|>\n<|im_start|>user\n{example['input']}<|im_end|>\n<|im_start|>assistant\n",
-    #     add_special_tokens=False,
-    # )
     messages = [
         {"role": "system", "content": example['instruction']},
         {"role": "user", "content": example['input']}
