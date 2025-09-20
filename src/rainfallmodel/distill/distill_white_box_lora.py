@@ -14,24 +14,10 @@
 
 
 
-# 在输出目录中的文件名及其作用
-RAINFALLBOARD_CONFIG = "rainfallboard_config.yaml" # 监控参数文件
-VACAB_ARG_CONF_FILE_NAME = "vocab_args.yaml" # 词表训练参数文件
-PRETRAIN_ARG_CONF_FILE_NAME = "pretrain_args.yaml" # 模型预训练参数文件
-SFT_ARG_CONF_FILE_NAME = "sft_args.yaml" # 模型监督微调参数文件
-DISTILL_ARG_CONF_FILE_NAME = "distill_args.yaml" # 模型蒸馏参数文件
 
-
-
-
-
-
-
-
-
-
-
-
+def do_distill_wb_lora(distill_conf:dict):
+    # 待实现
+    pass
 
 
 

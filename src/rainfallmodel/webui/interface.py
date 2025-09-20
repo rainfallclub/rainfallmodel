@@ -25,6 +25,7 @@ from .tab_top import create_top
 from .tab_todo import create_todo_tab
 from .tab_sft import create_sft_tab
 from .tab_distill import create_distill_tab
+from .tab_format import create_format_tab
 from .manager import Manager
 from ..common.misc import is_env_enabled, fix_proxy
 
@@ -60,11 +61,13 @@ def create_ui() -> "gr.Blocks":
         with gr.Tab("模型微调"):
             manager.add_elems("sft", create_sft_tab(manager))
         with gr.Tab("模型蒸馏"):
-            manager.add_elems("distill", create_todo_tab(manager))
+            manager.add_elems("distill", create_distill_tab(manager))
         # with gr.Tab("模型量化"):
         #     manager.add_elems("quan", create_todo_tab(manager)) 暂时先不做这种
-        with gr.Tab("数据集处理"):
-            manager.add_elems("data", create_todo_tab(manager))
+        # with gr.Tab("数据集处理"):
+        #     manager.add_elems("data", create_todo_tab(manager))
+        with gr.Tab("模型格式与导出"):
+            manager.add_elems("export", create_format_tab(manager))
 
     return demo
 

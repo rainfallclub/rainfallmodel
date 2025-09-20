@@ -15,6 +15,10 @@
         "sft_cog_demo1":{
             "file_path":"data/dataset/sft_cog_demo1.json",
             "type":"local_file_relative_path"
+        },
+        "distill_cog_demo1":{
+            "file_path":"data/dataset/distill_cog_demo1.json",
+            "type":"local_file_relative_path"
         }
     },
     "tokenizer":{
@@ -37,9 +41,26 @@
             "type": "hugging_face_repo"
 
         },
+        "minimind_v2": {
+            "repo": "jingyaogong/MiniMind2",
+            "type": "hugging_face_repo"
+        },
         "qwen3_0.6b": {
             "repo": "Qwen/Qwen3-0.6B",
             "type": "hugging_face_repo"
+        }, 
+        "qwen3_1.7b": {
+            "repo": "Qwen/Qwen3-1.7B",
+            "type": "hugging_face_repo"
+        },
+        "qwen3_4b": {
+            "repo": "Qwen/Qwen3-4B",
+            "type": "hugging_face_repo"
+        },
+        "qwen3_8b": {
+            "repo": "Qwen/Qwen3-8B",
+            "type": "hugging_face_repo"
         }
+
     }
 }

@@ -24,6 +24,7 @@ from .pretrain.default_trainer import do_pretrain
 from .misc.misc import test_args
 from .inference.inf import do_infer
 from .sft.default_sft_trainer import do_sft
+from .distill.distill_interface import do_distill
 
 USAGE = (
     "-" * 67
@@ -52,6 +53,7 @@ def main():
     )
 
     COMMAND_MAP = {
+        "distill": do_distill,
         "sft": do_sft,
         "infer": do_infer,
         "misc": test_args,

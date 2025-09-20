@@ -43,6 +43,9 @@ ALERTS = {
     "infer_backend_unload":{
         "zh": "模型状态: 模型未加载"
     },
+    "infer_no_model":{
+        "zh": "模型未加载，无法推理",
+    },
 
     # 词表构建相关信息
     "vocab_dataset_not_exists": {
@@ -63,11 +66,25 @@ ALERTS = {
 
     # 微调时报错信息
     "sft_model_path_not_exist":{
-        "zh": "模型未填写"
+        "zh": "微调时模型必填"
     },
     "sft_dataset_path_not_exist":{
-        "zh": "数据集未填写"
+        "zh": "微调时数据集必填"
     },
+
+    # 蒸馏时报错信息
+    "distill_teacher_model_path_not_exist":{
+        "zh": "蒸馏时教师模型必填"
+    },
+    "distill_teacher_model_path_not_exist":{
+        "zh": "蒸馏时学生模型必填"
+    },
+    "distill_dataset_path_not_exist": {
+        "zh": "蒸馏时数据集必填"
+    },
+    "distill_doing": {
+        "zh": "模型蒸馏已开始，请耐心等待..."
+    }
 }
 
 

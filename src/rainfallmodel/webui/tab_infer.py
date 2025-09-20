@@ -20,6 +20,7 @@ from ..common.packages import is_gradio_available
 from .manager import Manager
 from .tab_infer_base import create_infer_base_tab
 from .tab_infer_chat import create_infer_chat_tab
+from .tab_infer_compaare import create_infer_compare_tab
 
 if is_gradio_available():
     import gradio as gr
@@ -37,6 +38,9 @@ def create_infer_tab(manager: "Manager") -> dict[str, "Component"]:
         with gr.Tab("聊天模式[以完成指令微调后的模型]"):
             chat_dict = create_infer_chat_tab(manager)
             elem_dict.update(chat_dict)
+        with gr.Tab("对比聊天模式[用于蒸馏时的对比]"):
+            compare_dict = create_infer_compare_tab(manager)
+            elem_dict.update(compare_dict)
     return elem_dict  
     
 

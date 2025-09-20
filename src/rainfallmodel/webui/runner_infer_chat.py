@@ -36,6 +36,7 @@ class InferChatRunner(InferInterface):
     r"""A class to manage the running status."""
 
     def __init__(self, manager: "Manager") -> None:
+        self.init_backend()
         self.manager = manager
 
     @property
@@ -52,7 +53,7 @@ class InferChatRunner(InferInterface):
         model_path = get("infer.model_path")
         lora_path = get("infer.lora_path")
         # 暂时不做重复性校验
-        super().__init__(model_path, lora_path)
+        self.init_chat_backend(model_path, lora_path)
         yield ALERTS["infer_backend_loaded"][lang]
 
     
@@ -80,7 +81,9 @@ class InferChatRunner(InferInterface):
 
         # 如果没有推理后端，暂时实现为不报错，原数据返回
         # todo， 还是实现为哪种形式呢？
-        if self.backend is None:
+        if self.chat_backend is None:
+            lang = self.manager.get_lang()
+            gr.Warning(ALERTS["infer_no_model"][lang])            
             return chatbot, messages, ""
         
         """

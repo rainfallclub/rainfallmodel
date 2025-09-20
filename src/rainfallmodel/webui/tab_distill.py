@@ -33,69 +33,88 @@ def create_distill_tab(manager: "Manager") -> dict[str, "Component"]:
     input_elems = manager.get_base_elems()
     elem_dict = dict()
 
-
-    with gr.Blocks():
-        with gr.Tab("黑盒蒸馏"):
-            hidden_size_list =[256, 768, 1024, 4096]
-            hidden_size = gr.Dropdown(choices=hidden_size_list, label="全量微调配置1", value=256, interactive=True, allow_custom_value=True)
-            intermediate_size_list =[768, 3072, 4096, 11008]
-            intermediate_size = gr.Dropdown(choices=intermediate_size_list, label="全量微调配置2", value=768, interactive=True, allow_custom_value=True)
-        with gr.Tab("白盒蒸馏"):
-            hidden_size_list =[256, 768, 1024, 4096]
-            hidden_size = gr.Dropdown(choices=hidden_size_list, label="全量微调配置1", value=256, interactive=True, allow_custom_value=True)
-            intermediate_size_list =[768, 3072, 4096, 11008]
-            intermediate_size = gr.Dropdown(choices=intermediate_size_list, label="全量微调配置2", value=768, interactive=True, allow_custom_value=True)
+    gr.Markdown("---")
+    gr.HTML("<h3><center>蒸馏这部分涵盖内容非常广泛，业内实践也很多，后续会做的更加复杂</center></h3>")
+    gr.HTML("<h3><center>可能会有:黑盒蒸馏、白盒蒸馏、软标签蒸馏、全序列蒸馏、响应蒸馏(序列级蒸馏、输出蒸馏)、token级蒸馏、层次蒸馏、多教师蒸馏等等</center></h3>")
+    gr.Markdown("---") 
+    gr.HTML("<h3><center>当前版本仅支持部分实现</centor></h3>")
        
 
     gr.Markdown("---") 
     gr.Markdown("#### 资源配置")
     with gr.Row():
         dataset_path_list = get_dataset_config()
-        dataset_path = gr.Dropdown(choices=dataset_path_list, label="数据集文件(支持本地文件，也可以下拉框中选择)",  interactive=True, allow_custom_value=True)
+        dataset_path = gr.Dropdown(choices=dataset_path_list, label="数据集文件(支持本地文件，也可以下拉框中选择)", value="distill_cog_demo1", interactive=True, allow_custom_value=True)
 
     with gr.Row():
-        model_path_list = get_model_config()
-        model_path = gr.Dropdown(choices=model_path_list, label="模型路径或地址",  interactive=True, allow_custom_value=True)
+        teacher_model_path_list = get_model_config()
+        teacher_model_path = gr.Dropdown(choices=teacher_model_path_list, label="教师模型路径或地址", value="minimind_v2", interactive=True, allow_custom_value=True)
     
     with gr.Row():
-        output_path_list = [get_output_path() + "_sft"]
+        student_model_path_list = get_model_config()
+        student_model_path = gr.Dropdown(choices=student_model_path_list, label="学生模型路径或地址", value="rainfall_4m_base",  interactive=True, allow_custom_value=True)
+
+    with gr.Row():
+        output_path_list = [get_output_path() + "_distill"]
         output_dir = gr.Dropdown(choices=output_path_list, label="输出路径",  interactive=True, allow_custom_value=True)
 
-    input_elems.update({dataset_path, output_dir, model_path})
+    input_elems.update({dataset_path, output_dir, teacher_model_path, student_model_path})
     elem_dict.update(
         dict(
             dataset_path=dataset_path, 
             output_dir=output_dir, 
-            model_path=model_path
+            teacher_model_path=teacher_model_path,
+            student_model_path=student_model_path
         )
     )
 
     gr.Markdown("---") 
-    gr.Markdown("#### 微调类型配置")
-    with gr.Blocks():
-        with gr.Tab("全量微调"):
-            hidden_size_list =[256, 768, 1024, 4096]
-            hidden_size = gr.Dropdown(choices=hidden_size_list, label="全量微调配置1", value=256, interactive=True, allow_custom_value=True)
-            intermediate_size_list =[768, 3072, 4096, 11008]
-            intermediate_size = gr.Dropdown(choices=intermediate_size_list, label="全量微调配置2", value=768, interactive=True, allow_custom_value=True)
-        with gr.Tab("freeze微调"):
-            hidden_size_list =[256, 768, 1024, 4096]
-            hidden_size = gr.Dropdown(choices=hidden_size_list, label="freeze微调配置1", value=256, interactive=True, allow_custom_value=True)
-            intermediate_size_list =[768, 3072, 4096, 11008]
-            intermediate_size = gr.Dropdown(choices=intermediate_size_list, label="freeze微调配置2", value=768, interactive=True, allow_custom_value=True)
-        with gr.Tab("LoRA微调"):
-            hidden_size_list =[256, 768, 1024, 4096]
-            hidden_size = gr.Dropdown(choices=hidden_size_list, label="LoRA微调配置1", value=256, interactive=True, allow_custom_value=True)
-            intermediate_size_list =[768, 3072, 4096, 11008]
-            intermediate_size = gr.Dropdown(choices=intermediate_size_list, label="LoRA微调配置2", value=768, interactive=True, allow_custom_value=True)  
+    gr.Markdown("#### 蒸馏配置")
+    with gr.Row():
+        distill_type_list = ["full",  "lora"]
+        distill_type = gr.Dropdown(choices=distill_type_list, label="参数变更类型",  value="full", interactive=True, allow_custom_value=True)
+        lora_rank_list = [4, 8, 16, 32]
+        lora_rank = gr.Dropdown(choices=lora_rank_list, label="LoRA秩rank",  value=8, interactive=True, allow_custom_value=True)
+        lora_alpha_list = [4, 8, 16, 32, 64]
+        lora_alpha = gr.Dropdown(choices=lora_alpha_list, label="LoRA alpha",  value=16, interactive=True, allow_custom_value=True)
+        lora_target_modules = gr.Textbox(label="生效模块(用逗号分割)", value="q_proj,k_proj,v_proj,o_proj", interactive=True)
+        lora_dropout = gr.Textbox(label="LoRA dropout", value=0.0, interactive=True)
+
+    input_elems.update({distill_type,lora_rank,lora_alpha,lora_target_modules,lora_dropout})
+    elem_dict.update(
+        dict(
+            distill_type=distill_type, 
+            lora_rank=lora_rank, 
+            lora_alpha=lora_alpha,
+            lora_target_modules=lora_target_modules,
+            lora_dropout=lora_dropout
+        )
+    )
+
+    with gr.Row():
+        temperature_list = [1.0, 2.0, 3.0]
+        temperature = gr.Dropdown(choices=temperature_list, label="温度temperature",  value=2.0, interactive=True, allow_custom_value=True)
+        reduction_list = ["sum", "batchmean"]
+        reduction = gr.Dropdown(choices=reduction_list, label="reduction",  value="sum", interactive=True, allow_custom_value=True, visible=False)
+        loss_alpha_list = [0, 0.5, 1]
+        loss_alpha = gr.Dropdown(choices=loss_alpha_list, label="损失权重alpha(平衡KL和CE损失)",  value=1, interactive=True, allow_custom_value=True)
+
+    input_elems.update({temperature,reduction,loss_alpha})
+    elem_dict.update(
+        dict(
+            temperature=temperature, 
+            reduction=reduction, 
+            loss_alpha=loss_alpha,
+        )
+    )
 
     gr.Markdown("---") 
     gr.Markdown("#### 数据加载与计算部分(请参考机器配置)")
     with gr.Row():
-        batch_size = gr.Textbox(label="训练批次batch_size", value=4, interactive=True)
+        batch_size = gr.Textbox(label="训练批次batch_size", value=1, interactive=True)
         epochs = gr.Textbox(label="训练轮次epoch", value=3, interactive=True)
-        learning_rate = gr.Textbox(label="学习率learning_rate", value='2e-4', interactive=True)
-        gradient_accumulation_steps = gr.Textbox(label="梯度累积步数", value=4, interactive=True)
+        learning_rate = gr.Textbox(label="学习率learning_rate", value='5e-4', interactive=True)
+        gradient_accumulation_steps = gr.Textbox(label="梯度累积步数", value=2, interactive=True)
         lr_scheduler_type = gr.Textbox(label="学习率调整策略lr_scheduler_type", value='cosine', interactive=True)
     
     input_elems.update({batch_size, epochs, learning_rate, gradient_accumulation_steps, lr_scheduler_type})
@@ -112,10 +131,10 @@ def create_distill_tab(manager: "Manager") -> dict[str, "Component"]:
     gr.Markdown("---") 
     gr.Markdown("#### 模型保存部分")
     with gr.Row():
-        save_total_limit = gr.Textbox(label="共计保存限制", value=5, interactive=True)
+        save_total_limit = gr.Textbox(label="共计保存限制", value=3, interactive=True)
         save_steps = gr.Textbox(label="每多少步保存一次", value=1000, interactive=True)
         save_safetensors_list = [True, False]
-        save_safetensors = gr.Dropdown(choices=save_safetensors_list, label="是否使用SafeTensor格式", value=False, interactive=True)
+        save_safetensors = gr.Dropdown(choices=save_safetensors_list, label="是否使用safetensors格式", value=False, interactive=True)
        
     input_elems.update({save_total_limit, save_steps, save_safetensors})
     elem_dict.update(
@@ -130,18 +149,18 @@ def create_distill_tab(manager: "Manager") -> dict[str, "Component"]:
     gr.Markdown("---") 
     gr.Markdown("#### 其他配置")
     with gr.Blocks():
-        with gr.Tab("Eval配置"):
-             with gr.Row():
-                eval_strategy_value_list = ["epoch", "steps", "no"]
-                eval_strategy = gr.Dropdown(choices=eval_strategy_value_list, label="验证集策略", value="steps", interactive=True, allow_custom_value=True)
-                eval_steps = gr.Textbox(label="每多少步验证一次(仅设置按步数验证时有效)", value=1000, interactive=True)
-                input_elems.update({eval_strategy, eval_steps})
-                elem_dict.update(
-                    dict(
-                        eval_strategy=eval_strategy, 
-                        eval_steps=eval_steps
-                    )
-                )
+        # with gr.Tab("Eval配置"):
+        #      with gr.Row():
+        #         eval_strategy_value_list = ["epoch", "steps", "no"]
+        #         eval_strategy = gr.Dropdown(choices=eval_strategy_value_list, label="验证集策略", value="steps", interactive=True, allow_custom_value=True)
+        #         eval_steps = gr.Textbox(label="每多少步验证一次(仅设置按步数验证时有效)", value=1000, interactive=True)
+        #         input_elems.update({eval_strategy, eval_steps})
+        #         elem_dict.update(
+        #             dict(
+        #                 eval_strategy=eval_strategy, 
+        #                 eval_steps=eval_steps
+        #             )
+        #         )
         with gr.Tab("日志&监控配置"):
              with gr.Row():
                 logging_steps = gr.Textbox(label="每多少步记录一次日志", value=10, interactive=True)
@@ -179,7 +198,7 @@ def create_distill_tab(manager: "Manager") -> dict[str, "Component"]:
         )
     )
     output_elems = [output_box, progress_bar, loss_viewer]
-    # start_btn.click(manager.pretrain_runner.run_pretrain, input_elems, output_elems)
+    start_btn.click(manager.distill_runner.run_distill_train, input_elems, output_elems)
 
 
     return elem_dict

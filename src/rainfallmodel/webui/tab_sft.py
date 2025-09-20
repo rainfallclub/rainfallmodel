@@ -37,11 +37,11 @@ def create_sft_tab(manager: "Manager") -> dict[str, "Component"]:
     gr.Markdown("#### 资源配置")
     with gr.Row():
         model_path_list = get_model_config()
-        model_path = gr.Dropdown(choices=model_path_list, label="模型路径或地址",  interactive=True, allow_custom_value=True)
+        model_path = gr.Dropdown(choices=model_path_list, label="模型路径或地址", value="rainfall_4m_base",  interactive=True, allow_custom_value=True)
 
     with gr.Row():
         dataset_path_list = get_dataset_config()
-        dataset_path = gr.Dropdown(choices=dataset_path_list, label="数据集文件(支持本地文件，也可以下拉框中选择)",  interactive=True, allow_custom_value=True)
+        dataset_path = gr.Dropdown(choices=dataset_path_list, label="数据集文件(支持本地文件，也可以下拉框中选择)", value="sft_cog_demo1", interactive=True, allow_custom_value=True)
         
     with gr.Row():
         output_path_list = [get_output_path() + "_sft"]

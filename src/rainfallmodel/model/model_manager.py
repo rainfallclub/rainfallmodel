@@ -27,10 +27,11 @@ def get_pretrain_model(user_conf:dict, tokenizer:AutoTokenizer) -> PreTrainedMod
     return get_llama_model(model_conf)
 
 
-def get_sft_real_model_path(model_path: str) -> str:
+def get_real_model_path(model_path: str) -> str:
     """
     根据model_path判断是否需要远程拉取
     获取真正的模型路径地址信息
+    在微调、蒸馏等流程中会使用到
     """
     model_dict = get_model_config()
     if model_path not in model_dict:

@@ -17,7 +17,7 @@ from transformers import AutoModelForCausalLM, TrainingArguments, Trainer, DataC
 
 from ..dataset.dataset_manager import get_sft_dataset
 from transformers import Trainer, TrainingArguments
-from ..model.model_manager import get_sft_real_model_path
+from ..model.model_manager import get_real_model_path
 
 def get_full_ft_args(sft_conf:dict) -> TrainingArguments:
     """
@@ -47,7 +47,7 @@ def do_full_ft(sft_conf:dict):
 
     # 第一步，加载分词器和模型
     model_path = sft_conf['model_path']
-    real_model_path = get_sft_real_model_path(model_path)
+    real_model_path = get_real_model_path(model_path)
     model = AutoModelForCausalLM.from_pretrained(real_model_path)
     tokenizer = AutoTokenizer.from_pretrained(real_model_path)
 
