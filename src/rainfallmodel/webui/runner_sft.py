@@ -28,7 +28,7 @@ from .common import (
     save_cmd
 )
     
-from ..common.constants import RAINFALLBOARD_CONFIG, VACAB_ARG_CONF_FILE_NAME
+from ..common.constants import RAINFALLBOARD_CONFIG, SFT_ARG_CONF_FILE_NAME
 
 if is_gradio_available():
     import gradio as gr
@@ -73,6 +73,7 @@ class SftRunner:
             gr.Warning(error)
             yield {output_box: error}
         else:
+            gr.Info(ALERTS["sft_doing"][self.manager.get_lang()])
             args = self._parse_sft_args(data)
             output_dir = args["output_dir"]
             os.makedirs(output_dir, exist_ok=True)
@@ -81,7 +82,7 @@ class SftRunner:
             env = deepcopy(os.environ)
 
             # NOTE: DO NOT USE shell=True to avoid security risk
-            self.trainer = Popen(["rainfallmodel", "sft", save_cmd(args, output_dir, VACAB_ARG_CONF_FILE_NAME)], env=env)
+            self.trainer = Popen(["rainfallmodel", "sft", save_cmd(args, output_dir, SFT_ARG_CONF_FILE_NAME)], env=env)
             # todo，实现监控功能
             # yield from self.monitor()
 

@@ -71,6 +71,9 @@ ALERTS = {
     "sft_dataset_path_not_exist":{
         "zh": "微调时数据集必填"
     },
+    "sft_doing":{
+        "zh": "模型微调已开始，请耐心等待..."
+    },
 
     # 蒸馏时报错信息
     "distill_teacher_model_path_not_exist":{
