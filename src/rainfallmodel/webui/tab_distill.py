@@ -33,11 +33,10 @@ def create_distill_tab(manager: "Manager") -> dict[str, "Component"]:
     input_elems = manager.get_base_elems()
     elem_dict = dict()
 
-    gr.Markdown("---")
-    gr.HTML("<h3><center>蒸馏这部分涵盖内容非常广泛，业内实践也很多，后续会做的更加复杂</center></h3>")
-    gr.HTML("<h3><center>可能会有:黑盒蒸馏、白盒蒸馏、软标签蒸馏、全序列蒸馏、响应蒸馏(序列级蒸馏、输出蒸馏)、token级蒸馏、层次蒸馏、多教师蒸馏等等</center></h3>")
-    gr.Markdown("---") 
-    gr.HTML("<h3><center>当前版本仅支持部分实现</centor></h3>")
+
+    # gr.HTML("<h3><center>蒸馏这部分涵盖内容非常广泛，业内实践也很多，后续会做的更加复杂</center></h3>")
+    # gr.HTML("<h3><center>可能会有:黑盒蒸馏、白盒蒸馏、软标签蒸馏、全序列蒸馏、响应蒸馏(序列级蒸馏、输出蒸馏)、token级蒸馏、层次蒸馏、多教师蒸馏等等</center></h3>")
+
        
 
     gr.Markdown("---") 
