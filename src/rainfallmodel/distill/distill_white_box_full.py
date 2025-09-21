@@ -19,6 +19,7 @@ from transformers import TrainingArguments, AutoModelForCausalLM, AutoTokenizer,
 from ..model.model_manager import get_real_model_path
 from ..dataset.dataset_manager import get_sft_dataset
 from .trainer.default_trainer import Default_Trainer
+from swanlab.integration.transformers import SwanLabCallback
 
 def get_distill_args(distill_conf:dict):
     """
@@ -40,6 +41,24 @@ def get_distill_args(distill_conf:dict):
     )
     return args 
 
+def get_callback(distill_conf:dict) -> list:
+    """
+    回调部分，暂时先实现swanlab的监控上报
+    """
+
+    if not distill_conf['use_swanlab']:
+        return []
+
+    swanlab_callback = SwanLabCallback(
+        project= distill_conf['swanlab_project_name'],
+        experiment_name= distill_conf['swanlab_experiment_name'],
+        config={
+            "platform": "rainfall_model_factory",
+        }
+    )
+
+    return [swanlab_callback]
+
 def do_distill_wb_full(distill_conf:dict):
     
     # 第一步，加载学生模型、分词器和教师模型
@@ -58,6 +77,7 @@ def do_distill_wb_full(distill_conf:dict):
     # 第三步，获取Trainer所需的参数
     args = get_distill_args(distill_conf)
     data_collator = DataCollatorForSeq2Seq(tokenizer=tokenizer, padding=True)
+    callbacks = get_callback(distill_conf)
 
     # 第四步，开始训练
     trainer = Default_Trainer(student_model=student_model,
@@ -69,7 +89,9 @@ def do_distill_wb_full(distill_conf:dict):
                         data_collator=data_collator,
                         reduction=distill_conf["reduction"], 
                         alpha=float(distill_conf["loss_alpha"]),
-                        temperature=float(distill_conf["temperature"]))
+                        temperature=float(distill_conf["temperature"]),
+                        callbacks=callbacks
+                        )
     trainer.train()
    
     

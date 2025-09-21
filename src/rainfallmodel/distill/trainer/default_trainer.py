@@ -14,14 +14,16 @@ class Default_Trainer(Trainer):
                 data_collator,
                 reduction = "sum",
                 alpha=0.5, 
-                temperature=3.0):
+                temperature=3.0,
+                callbacks=[]):
         super().__init__(
             student_model,
             args,
             data_collator,
             train_dataset,
             eval_dataset,
-            tokenizer
+            tokenizer,
+            callbacks=callbacks
         )
         self.teacher_model = teacher_model
         self.alpha = alpha

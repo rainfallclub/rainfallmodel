@@ -163,7 +163,7 @@ def create_distill_tab(manager: "Manager") -> dict[str, "Component"]:
         #         )
         with gr.Tab("日志&监控配置"):
              with gr.Row():
-                logging_steps = gr.Textbox(label="每多少步记录一次日志", value=10, interactive=True)
+                logging_steps = gr.Textbox(label="每多少步记录一次日志", value=1, interactive=True)
                 use_swanlab_list = [True, False]
                 use_swanlab = gr.Dropdown(choices=use_swanlab_list, label="是否使用Swanlab", value=True, interactive=True)
                 swanlab_project_name = gr.Textbox(label="swanlab项目名", value="rainfall_project", interactive=True)
