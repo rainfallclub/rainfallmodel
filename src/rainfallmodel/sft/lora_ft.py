@@ -94,6 +94,7 @@ def do_lora_ft(sft_conf:dict):
     # 第四步，得到高效模型
     lora_config = get_lora_config(sft_conf)
     model = get_peft_model(base_model, lora_config)
+    model.print_trainable_parameters() # 打印出可训练参数
 
     # 第五步，开始训练
     trainer = Trainer(
