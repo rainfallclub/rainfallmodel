@@ -18,6 +18,8 @@ from ..dataset.dataset_manager import get_sft_dataset
 from transformers import Trainer, TrainingArguments
 from ..model.model_manager import get_real_model_path
 from peft import LoraConfig, get_peft_model
+from swanlab.integration.transformers import SwanLabCallback
+
 
 def get_full_ft_args(sft_conf:dict) -> TrainingArguments:
     """
@@ -38,6 +40,25 @@ def get_full_ft_args(sft_conf:dict) -> TrainingArguments:
     )
     return args
 
+
+
+def get_callback(distill_conf:dict) -> list:
+    """
+    回调部分，暂时先实现swanlab的监控上报
+    """
+
+    if not distill_conf['use_swanlab']:
+        return []
+
+    swanlab_callback = SwanLabCallback(
+        project= distill_conf['swanlab_project_name'],
+        experiment_name= distill_conf['swanlab_experiment_name'],
+        config={
+            "platform": "rainfall_model_factory",
+        }
+    )
+
+    return [swanlab_callback]
 
 def get_lora_config(sft_conf:dict):
     lora_config = LoraConfig(
@@ -68,6 +89,7 @@ def do_lora_ft(sft_conf:dict):
     # 第三步，定义Trainer所需的参数
     args = get_full_ft_args(sft_conf)
     data_collator = DataCollatorForSeq2Seq(tokenizer=tokenizer, padding=True)
+    callbacks = get_callback(sft_conf)
     
     # 第四步，得到高效模型
     lora_config = get_lora_config(sft_conf)
@@ -79,5 +101,6 @@ def do_lora_ft(sft_conf:dict):
         args=args,
         train_dataset=train_dataset,
         data_collator=data_collator,
+        callbacks=callbacks
     )
     trainer.train()

@@ -21,10 +21,12 @@ import html
 
 
 from ..common.packages import is_gradio_available
+from ..common.resource import get_model_config
 from ..common.resource import  get_tokenizer_config
 from ..vocab.info import get_tokenizer
 from .manager import Manager
-
+from ..export.merge_lora import do_merge_lora
+from ..common.resource import get_output_path
 
 if is_gradio_available():
     import gradio as gr
@@ -33,48 +35,38 @@ if is_gradio_available():
 if TYPE_CHECKING:
     from gradio.components import Component
 
-tokenizer = None
 
-def show_tokenizer_info_click(tokenizer_path):
-    tokenizer = get_tokenizer(tokenizer_path)
-    vocab_info = str(tokenizer)
-    return "词表详情:" + html.escape(vocab_info) # 这里需要进行HTML编码，特别注意！！
-
-def clear_tokenizer_info_click():
-    return ""
-
-def do_tokenizer_encode_click(input_str, tokenizer_path):
-    tokenizer = get_tokenizer(tokenizer_path)
-    return "编码后的内容: " + str(tokenizer.encode(input_str))
-
-def do_tokenizer_decode_click(input_ids, tokenizer_path):
-    tokenizer = get_tokenizer(tokenizer_path)
-    input_ids_list = ast.literal_eval(input_ids)
-    decoded_str = tokenizer.decode(input_ids_list)
-    return "解码后的内容: " + decoded_str
 
 def create_format_tab(manager: "Manager") -> dict[str, "Component"]:
     input_elems = manager.get_base_elems()
     elem_dict = dict()
-    gr.Markdown("---")
-    gr.Markdown("#### 模型转换为Safetensors格式")
-    with gr.Row():
-        model1_source_path = gr.Text(label="模型原始路径", value="",  interactive=True)
-    with gr.Row():
-        model1_target_path = gr.Text(label="模型新路径", value="",  interactive=True, scale=8)
-        model1_export_safetensors_btn = gr.Button(value="开始导出", variant="stop")
+    # gr.Markdown("---")
+    # gr.Markdown("#### 模型转换为Safetensors格式")
+    # with gr.Row():
+    #     model1_source_path = gr.Text(label="模型原始路径", value="",  interactive=True)
+    # with gr.Row():
+    #     model1_target_path = gr.Text(label="模型新路径", value="",  interactive=True, scale=8)
+    #     model1_export_safetensors_btn = gr.Button(value="开始导出", variant="stop")
     gr.Markdown("---")
     gr.Markdown("#### 把LoRA合并到原始模型，生成新模型")
 
     with gr.Row():
-        base_model2_source_path = gr.Text(label="基础模型路径", value="",  interactive=True)
+        model_path_list = get_model_config()
+        base_model2_source_path = gr.Dropdown(choices=model_path_list, label="模型路径或地址", value="rainfall_4m_base",  interactive=True, allow_custom_value=True)
     with gr.Row():
         lora_path = gr.Text(label="LoRA路径", value="",  interactive=True)
     with gr.Row():
-        model2_target_path = gr.Text(label="合并后的路径", value="",  interactive=True,  scale=8)
+        output_path_list = [get_output_path() + "_export"]
+        model2_target_path = gr.Dropdown(choices=output_path_list, label="合并后的路径(可以选择，也可以自定义)",  interactive=True, allow_custom_value=True, scale=8)
+
+        # model2_target_path = gr.Text(label="合并后的路径", value="",  interactive=True,  scale=8)
         export_model2_btn = gr.Button(value="开始合并", variant="stop")
     
     gr.Markdown("---")
+    export_model2_btn.click(fn=do_merge_lora, inputs=[base_model2_source_path, lora_path, model2_target_path], outputs=[])
+
+
+    
 
 
     return elem_dict
