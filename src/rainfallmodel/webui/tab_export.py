@@ -65,10 +65,6 @@ def create_format_tab(manager: "Manager") -> dict[str, "Component"]:
     gr.Markdown("---")
     export_model2_btn.click(fn=do_merge_lora, inputs=[base_model2_source_path, lora_path, model2_target_path], outputs=[])
 
-
-    
-
-
     return elem_dict
 
 

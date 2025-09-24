@@ -36,6 +36,20 @@ class InferInterface:
     def init_compare_backend(self, teacher_model_path:str, student_model_path:str) -> None:
         self.teacher_backend = BackendHf(teacher_model_path, None)
         self.student_backend = BackendHf(student_model_path, None)
+
+    def init_multi_backend(self, baseline_model_path:str, comp1_path:str, comp2_path:str, comp3_path:str) -> None:
+        self.baseline_backend = None
+        self.comp1_backend = None
+        self.comp2_backend = None
+        self.comp3_backend = None
+        if len(baseline_model_path) > 0:
+            self.baseline_backend = BackendHf(baseline_model_path, None)
+        if len(comp1_path) > 0 :
+            self.comp1_backend = BackendHf(comp1_path, None)
+        if len(comp2_path) > 0 :
+            self.comp2_backend = BackendHf(comp2_path, None)
+        if len(comp3_path) > 0:
+            self.comp3_backend = BackendHf(comp3_path, None)
     
     
     def infer_generate(self, query: str, max_new_tokens: int, top_p: float, temperature: float) -> str:
@@ -58,6 +72,24 @@ class InferInterface:
         teacher_resp =  self.teacher_backend.chat(query, max_new_tokens, top_p, temperature)
         student_resp = self.student_backend.chat(query, max_new_tokens, top_p, temperature)
         return (teacher_resp, student_resp)
+    
+    def infer_multi_generate(self, query: str, max_new_tokens: int, top_p: float, temperature: float) -> str:
+        """
+        普通推理模式
+        """
+        baseline_resp = ""
+        comp1_resp = ""
+        comp2_resp = ""
+        comp3_resp = ""
+        if self.baseline_backend is not None:
+            baseline_resp = self.baseline_backend.generate(query, max_new_tokens, top_p, temperature)
+        if self.comp1_backend is not None:
+            comp1_resp = self.comp1_backend.generate(query, max_new_tokens, top_p, temperature)
+        if self.comp2_backend is not None:
+            comp2_resp = self.comp2_backend.generate(query, max_new_tokens, top_p, temperature)
+        if self.comp3_backend is not None:
+            comp3_resp = self.comp3_backend.generate(query, max_new_tokens, top_p, temperature)
+        return (baseline_resp, comp1_resp, comp2_resp, comp3_resp)
 
         
 

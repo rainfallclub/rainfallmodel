@@ -24,7 +24,9 @@ from .runner_sft import SftRunner
 from .runner_infer_base import InferBaseRunner
 from .runner_infer_chat import InferChatRunner
 from .runner_infer_compare import InferCompareRunner
+from .runner_infer_multi import InferMultiRunner
 from .runner_distill import DistillRunner
+from .runner_prune import PruneRunner
 
 
 if TYPE_CHECKING:
@@ -42,7 +44,9 @@ class Manager:
         self.infer_base_runner = InferBaseRunner(self)
         self.infer_chat_runner = InferChatRunner(self)
         self.infer_compare_runner = InferCompareRunner(self)
+        self.infer_multi_runner = InferMultiRunner(self)
         self.distill_runner = DistillRunner(self)
+        self.prune_runner = PruneRunner(self)
 
     def get_lang(self) -> str:
         r"""Support Chinese Only Current"""
