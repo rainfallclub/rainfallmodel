@@ -21,7 +21,7 @@ from ..common.parser import read_args
 
 
 
-def do_prune(args: Optional[dict[str, Any]] = None) -> None:
+def do_quant(args: Optional[dict[str, Any]] = None) -> None:
     """
     仅支持在webui中操作
     """

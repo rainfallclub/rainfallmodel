@@ -27,6 +27,7 @@ from .tab_sft import create_sft_tab
 from .tab_distill import create_distill_tab
 from .tab_export import create_format_tab
 from .tab_prune import create_prune_tab
+from .tab_quant import create_quant_tab
 from .manager import Manager
 from ..common.misc import is_env_enabled, fix_proxy
 
@@ -63,8 +64,8 @@ def create_ui() -> "gr.Blocks":
             manager.add_elems("sft", create_sft_tab(manager))
         with gr.Tab("模型蒸馏"):
             manager.add_elems("distill", create_distill_tab(manager))
-        # with gr.Tab("模型量化"):
-        #     manager.add_elems("quan", create_todo_tab(manager)) 暂时先不做这种
+        with gr.Tab("模型量化"):
+            manager.add_elems("quant", create_quant_tab(manager))
         with gr.Tab("模型剪枝"):
             manager.add_elems("prune", create_prune_tab(manager))
         # with gr.Tab("数据集处理"):

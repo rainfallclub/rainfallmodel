@@ -39,7 +39,14 @@
         "rainfall_4m_base":{
             "repo": "rainfullclub/rainfallmodeltest2",
             "type": "hugging_face_repo"
-
+        },
+        "rainfall_4m_base_4bit":{
+            "repo": "rainfullclub/rainfall_4m_4bit",
+            "type": "hugging_face_repo"
+        },
+        "rainfall_4m_base_8bit":{
+            "repo": "rainfullclub/rainfall_4m_8bit",
+            "type": "hugging_face_repo"
         },
         "minimind_v2": {
             "repo": "jingyaogong/MiniMind2",

@@ -28,12 +28,13 @@ class BackendHf:
         device = get_default_device()
         real_model_path = get_real_model_path(model_path)
         self.tokenizer = AutoTokenizer.from_pretrained(real_model_path)
-        base_model = AutoModelForCausalLM.from_pretrained(real_model_path)
+        base_model = AutoModelForCausalLM.from_pretrained(real_model_path, device_map="auto")
         if lora_path:
             peft_model = PeftModel.from_pretrained(base_model, lora_path).to(device).eval()
             self.model = peft_model
         else:
-            self.model = base_model.to(device).eval()
+            # self.model = base_model.to(device).eval() #对于量化过的模型不能调用to方法
+            self.model = base_model.eval()
 
     def generate(self, query: str, max_new_tokens: int, top_p: float, temperature: float) -> str:
         generation_config = self.get_generation_config(max_new_tokens, top_p, temperature)
