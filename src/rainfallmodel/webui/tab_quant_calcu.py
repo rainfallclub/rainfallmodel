@@ -1,3 +1,7 @@
+
+
+
+
 # Copyright 2025 the LlamaFactory team. and the RainFallModel team.
 #
 # This code is inspired by the LlamaFactory.
@@ -24,8 +28,7 @@ from .manager import Manager
 from ..export.merge_lora import do_merge_lora
 from ..common.resource import get_output_path
 from ..quant.quant_bnb import do_quant_bnb_interface
-from .tab_quant_calcu import create_quant_calcu_tab
-from .tab_quant_ptq_dynamic import create_quant_ptq_dynamic_tab
+from ..quant.quant_calcu import do_quant_calcu
 
 if is_gradio_available():
     import gradio as gr
@@ -36,16 +39,45 @@ if TYPE_CHECKING:
 
 
 
-def create_quant_tab(manager: "Manager") -> dict[str, "Component"]:
+def create_quant_calcu_tab(manager: "Manager") -> dict[str, "Component"]:
+    input_elems = manager.get_base_elems()
     elem_dict = dict()
-    with gr.Blocks():
-        with gr.Tab("PTQ动态量化"):
-            ptq_dynamic_dict = create_quant_ptq_dynamic_tab(manager)
-            elem_dict.update(ptq_dynamic_dict)
-        with gr.Tab("量化计算演示"):
-            calcu_dict = create_quant_calcu_tab(manager)
-            elem_dict.update(calcu_dict)
-    return elem_dict 
-
-
+    gr.Markdown("---")
+    gr.Markdown("#### 量化和反量化演示")
+    with gr.Row():
+        matrix_row_value_list = [2, 3, 4]
+        matrix_row_value = gr.Dropdown(choices=matrix_row_value_list, label="矩阵的行", value="2",  interactive=True, allow_custom_value=True)
+        matrix_col_value_list = [2, 3, 4]
+        matrix_col_value = gr.Dropdown(choices=matrix_col_value_list, label="矩阵的行", value="3",  interactive=True, allow_custom_value=True)
+        matrix_value_scale_list = [1, 10, 100]
+        matrix_value_scale = gr.Dropdown(choices=matrix_value_scale_list, label="数据缩放系数", value="1",  interactive=True, allow_custom_value=True)
+    with gr.Row():
+        export_model2_btn = gr.Button(value="数据演示", variant="stop")
+    with gr.Row():
+        calculate_result_content = gr.Markdown()
     
+    export_model2_btn.click(fn=do_quant_calcu, inputs=[matrix_row_value, matrix_col_value, matrix_value_scale], outputs=[calculate_result_content])
+
+    return elem_dict
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

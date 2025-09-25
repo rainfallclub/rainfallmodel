@@ -24,8 +24,6 @@ from .manager import Manager
 from ..export.merge_lora import do_merge_lora
 from ..common.resource import get_output_path
 from ..quant.quant_bnb import do_quant_bnb_interface
-from .tab_quant_calcu import create_quant_calcu_tab
-from .tab_quant_ptq_dynamic import create_quant_ptq_dynamic_tab
 
 if is_gradio_available():
     import gradio as gr
@@ -36,16 +34,24 @@ if TYPE_CHECKING:
 
 
 
-def create_quant_tab(manager: "Manager") -> dict[str, "Component"]:
+def create_quant_ptq_dynamic_tab(manager: "Manager") -> dict[str, "Component"]:
+    input_elems = manager.get_base_elems()
     elem_dict = dict()
-    with gr.Blocks():
-        with gr.Tab("PTQ动态量化"):
-            ptq_dynamic_dict = create_quant_ptq_dynamic_tab(manager)
-            elem_dict.update(ptq_dynamic_dict)
-        with gr.Tab("量化计算演示"):
-            calcu_dict = create_quant_calcu_tab(manager)
-            elem_dict.update(calcu_dict)
-    return elem_dict 
-
-
+    gr.Markdown("---")
+    gr.Markdown("#### PTQ动态量化")
+    with gr.Row():
+        model_path_list = get_model_config()
+        model_path = gr.Dropdown(choices=model_path_list, label="模型路径或地址(可以选择，也可以自定义)", value="rainfall_4m_base",  interactive=True, allow_custom_value=True)
+   
+    with gr.Row():
+        output_path_list = [get_output_path() + "_quant"]
+        output_dir = gr.Dropdown(choices=output_path_list, label="量化后的路径(可以选择，也可以自定义)",  interactive=True, allow_custom_value=True)
+        quant_type_list = ['8bit', '4bit']
+        quant_type = gr.Dropdown(choices=quant_type_list, label="量化类型", value='8bit',  interactive=True, allow_custom_value=True)
+        # model2_target_path = gr.Text(label="合并后的路径", value="",  interactive=True,  scale=8)
+    with gr.Row():
+        export_model2_btn = gr.Button(value="开始量化", variant="stop")
     
+    export_model2_btn.click(fn=do_quant_bnb_interface, inputs=[model_path, output_dir, quant_type], outputs=[])
+
+    return elem_dict
