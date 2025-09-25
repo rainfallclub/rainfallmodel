@@ -63,7 +63,7 @@ def do_quant_bnb(quant_conf:dict) -> None:
     )
     tokenizer = AutoTokenizer.from_pretrained(real_model_path)
 
-    # 第二步，执行保存
+    # 第三步，执行保存
     output_dir = quant_conf['output_dir']
     model.save_pretrained(output_dir)
     tokenizer.save_pretrained(output_dir)
