@@ -48,7 +48,7 @@ def create_quant_calcu_tab(manager: "Manager") -> dict[str, "Component"]:
         matrix_row_value_list = [2, 3, 4]
         matrix_row_value = gr.Dropdown(choices=matrix_row_value_list, label="矩阵的行", value="2",  interactive=True, allow_custom_value=True)
         matrix_col_value_list = [2, 3, 4]
-        matrix_col_value = gr.Dropdown(choices=matrix_col_value_list, label="矩阵的行", value="3",  interactive=True, allow_custom_value=True)
+        matrix_col_value = gr.Dropdown(choices=matrix_col_value_list, label="矩阵的列", value="3",  interactive=True, allow_custom_value=True)
         matrix_value_scale_list = [1, 10, 100]
         matrix_value_scale = gr.Dropdown(choices=matrix_value_scale_list, label="数据缩放系数", value="1",  interactive=True, allow_custom_value=True)
     with gr.Row():
