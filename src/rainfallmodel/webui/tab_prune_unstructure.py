@@ -22,6 +22,7 @@ from ..common.packages import is_gradio_available
 from .manager import Manager
 from ..common.resource import get_dataset_config, get_model_config, get_output_path
 from .tab_todo import create_todo_tab
+from ..prune.prune_calcu import do_prune_calcu
 
 if is_gradio_available():
     import gradio as gr
@@ -160,4 +161,33 @@ def create_local_unstructure_prune_tab(manager: "Manager") -> dict[str, "Compone
         start_btn = gr.Button(value="开始剪枝", variant="primary")
 
     start_btn.click(manager.prune_runner.do_unstructure_local_prune, inputs=input_elems, outputs=[])
+    return elem_dict
+
+
+
+def create_prune_calcu_tab(manager: "Manager") -> dict[str, "Component"]:
+    input_elems = manager.get_base_elems()
+    elem_dict = dict()
+    gr.Markdown("---")
+    gr.Markdown("#### 剪枝简易演示")
+    with gr.Row():
+        matrix_row_value_list = [2, 3, 4]
+        matrix_row_value = gr.Dropdown(choices=matrix_row_value_list, label="矩阵的行", value="2",  interactive=True, allow_custom_value=True)
+        matrix_col_value_list = [2, 3, 4]
+        matrix_col_value = gr.Dropdown(choices=matrix_col_value_list, label="矩阵的列", value="5",  interactive=True, allow_custom_value=True)
+        matrix_value_scale_list = [1, 10, 100]
+        matrix_value_scale = gr.Dropdown(choices=matrix_value_scale_list, label="数据缩放系数", value="1",  interactive=True, allow_custom_value=True)
+        prune_method_list = ["L1Unstructured", "RandomStructured"]
+        unstructure_prune_calcu_method = gr.Dropdown(choices=prune_method_list, label="剪枝方法",  value="L1Unstructured", interactive=True, allow_custom_value=True)
+        unstructure_prune_amount_list = [0.1, 0.3, 0.5, 0.7, 0.9]
+        unstructure_prune_calcu_amount = gr.Dropdown(choices=unstructure_prune_amount_list, label="剪枝比例",  value=0.1, interactive=True, allow_custom_value=True)
+        
+    
+    with gr.Row():
+        export_model2_btn = gr.Button(value="数据演示", variant="stop")
+    with gr.Row():
+        calculate_result_content = gr.Markdown()
+    
+    export_model2_btn.click(fn=do_prune_calcu, inputs=[matrix_row_value, matrix_col_value, matrix_value_scale, unstructure_prune_calcu_method, unstructure_prune_calcu_amount], outputs=[calculate_result_content])
+
     return elem_dict

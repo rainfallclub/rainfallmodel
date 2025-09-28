@@ -22,7 +22,8 @@ from ..common.packages import is_gradio_available
 from .manager import Manager
 from ..common.resource import get_dataset_config, get_model_config, get_output_path
 from .tab_todo import create_todo_tab
-from .tab_prune_unstructure import create_global_unstructure_prune_tab, create_local_unstructure_prune_tab
+from .tab_prune_unstructure import create_global_unstructure_prune_tab, create_local_unstructure_prune_tab, create_prune_calcu_tab
+
 
 if is_gradio_available():
     import gradio as gr
@@ -46,6 +47,10 @@ def create_prune_tab(manager: "Manager") -> dict[str, "Component"]:
         with gr.Tab("非结构化局部剪枝"):
             base_dict = create_local_unstructure_prune_tab(manager)
             elem_dict.update(base_dict)
+        with gr.Tab("非结构化剪枝计算演示"):
+            calcu_dict = create_prune_calcu_tab(manager)
+            elem_dict.update(calcu_dict)
+        
         # with gr.Tab("结构化剪枝"):
         #     compare_dict = create_todo_tab(manager)
         #     elem_dict.update(compare_dict)
