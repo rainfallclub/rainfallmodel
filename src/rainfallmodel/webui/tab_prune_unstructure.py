@@ -57,7 +57,7 @@ def create_global_unstructure_prune_tab(manager: "Manager") -> dict[str, "Compon
     with gr.Row():     
         unstructure_global_prune_rate_list = [0.1, 0.3, 0.5, 0.7, 0.9]
         unstructure_global_prune_rate = gr.Dropdown(choices=unstructure_global_prune_rate_list, label="剪枝比例",  value=0.1, interactive=True, allow_custom_value=True)
-        prune_method_list = ["L1Unstructured", "RandomStructured"]
+        prune_method_list = ["L1Unstructured"]
         unstructure_global_prune_method = gr.Dropdown(choices=prune_method_list, label="剪枝方法",  value="L1Unstructured", interactive=True, allow_custom_value=True)
         # unstructure_global_prune_modules = gr.Text(label="剪枝模块(用半角逗号分开)", value="self_attn,mlp",  interactive=True)
         # start_btn.click()
@@ -104,7 +104,7 @@ def create_local_unstructure_prune_tab(manager: "Manager") -> dict[str, "Compone
     gr.Markdown("---")
     gr.Markdown("#### 剪枝整体配置")
     with gr.Row():
-        prune_method_list = ["L1Unstructured", "RandomStructured"]
+        prune_method_list = ["L1Unstructured"]
         unstructure_local_prune_method = gr.Dropdown(choices=prune_method_list, label="剪枝方法",  value="L1Unstructured", interactive=True, allow_custom_value=True)
         unstructure_local_prune_layers_list = [1,2,4,8]
         unstructure_local_prune_layers = gr.Dropdown(choices=unstructure_local_prune_layers_list, label="剪枝层数",  value=4, interactive=True, allow_custom_value=True)

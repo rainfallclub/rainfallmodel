@@ -18,8 +18,6 @@ def comma_string_to_list(input_string:str) -> list:
 def get_prune_method(prune_method:str):
     if "L1Unstructured" == prune_method:
         return prune.L1Unstructured
-    elif "RandomStructured" == prune_method:
-        return prune.RandomStructured
     else:
         return None
 
